@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:8081/politicacomercial/crear-pais",
+  "tipo": "POST",
+  "paisEntity": {
+    "idPaisEntity": 0,
+    "codigoPortalPaisLowerCase": "cl",
+    "nombrePais": "Chile wn",
+    "fkIdTipoMoneda":{
+    	"idTipoMonedaEntity": 1
+    }
+  }
+}

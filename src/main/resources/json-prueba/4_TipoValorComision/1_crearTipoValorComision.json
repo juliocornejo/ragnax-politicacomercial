@@ -1,0 +1,8 @@
+{
+  "url": "http://localhost:8081/politicacomercial/crear-tipovalorcomision",
+  "tipo": "POST",
+  "tipoValorComisionEntity": {
+    "idTipoValorComisionEntity": 0,
+    "nombreTipoValorComision": "nominal"
+  }
+}

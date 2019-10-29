@@ -1,0 +1,10 @@
+{
+	"url": "http://localhost:8081/politicacomercial/crear-tiponegocio",
+	"tipo": "POST",
+	"tipoNegocioEntity": {
+		"idTipoNegocioEntity": 0,
+		"nombreTipoNegocio": "string",
+		"estadoTipoNegocio": true,
+		"productos_fees_comisiones": null
+	}
+}

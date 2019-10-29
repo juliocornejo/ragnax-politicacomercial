@@ -1,0 +1,19 @@
+{
+  "url": "http://localhost:8081/politicacomercial/crear-historialfeecomision",
+  "tipo": "POST",
+  "productoFeeComisionEntity": {
+    "idHistorialFeeComisionEntity": 0,
+    "fkIdProductoFeeComision": {
+      "codigoProductoFeeComision": "comisionfantasmadelab*1*1"
+    },
+    "fkIdTipoValorComision": {
+      "idTipoValorComisionEntity": 1
+    },
+    
+    "porcentajeFeeComision": 19.0,
+    "fechaInicioFeeComision": null,
+    "fechaFinalFeeComision": null,
+    "estadoFeeComision": null,
+    "historial_fees_comisiones": null
+  }
+}

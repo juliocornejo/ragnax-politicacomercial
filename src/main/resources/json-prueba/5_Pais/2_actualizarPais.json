@@ -1,0 +1,11 @@
+{
+  "url": "http://localhost:8081/politicacomercial/actualizar-pais/cl",
+  "tipo": "PUT",
+  "paisEntity": {
+    "codigoPortalPaisLowerCase": "cl",
+    "nombrePais": "Chile wn actualizado",
+    "fkIdTipoMoneda":{
+    	"idTipoMonedaEntity": 1
+    }
+  }
+}

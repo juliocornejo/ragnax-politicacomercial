@@ -1,0 +1,15 @@
+{
+  "url": "http://localhost:8081/politicacomercial/crear-tipocambio",
+  "tipo": "POST",
+  "tipoValorComisionEntity": {
+    "idTipoCambioEntity": 0,
+    "fkIdTipoMonedaBase": {
+    	"idTipoMonedaEntity": 1
+    },
+    "fkIdTipoMonedaCambio": {
+    	"idTipoMonedaEntity": 2
+    },
+   "codigoTipoCambio": "",
+   "descripcionTipoCambio": "" 
+  }
+}

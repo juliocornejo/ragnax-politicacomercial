@@ -1,0 +1,17 @@
+{
+  "url": "http://localhost:8081/politicacomercial/generar-codigoproductofeecomision",
+  "tipo": "POST",
+  "productoFeeComisionEntity": {
+    "idProductoFeeComisionEntity": 0,
+    "fkIdTipoNegocio": {
+      "idTipoNegocioEntity": 1
+    },
+    "fkIdTipoFeeComision": {
+      "idTipoFeeComisionEntity": 1
+    },
+    "nombreProductoServicio": "comision Fantasma",
+    "codigoProductoFeeComision": null,
+    "estadoProductoFeeComision": true,
+    "historial_fees_comisiones": null
+  }
+}

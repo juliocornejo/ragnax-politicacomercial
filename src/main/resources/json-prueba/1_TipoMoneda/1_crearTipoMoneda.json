@@ -1,0 +1,13 @@
+{
+	"url": "http://localhost:8081/politicacomercial/crear-tipomoneda",
+	"tipo": "POST",
+	"tipoMonedaEntity": {
+		"idTipoMonedaEntity": 0,
+		"codigoTipoMonedaUpperCase": "kout",
+		"nombreTipoMoneda": "Dolar Estado koreno",
+		"simboloTipoMoneda": "$",
+		"estadoTipoMoneda": true,
+		"tipos_cambios_bases": null,
+		"tipos_cambios_destinos": null
+	}
+}

@@ -1,0 +1,13 @@
+{
+  "url": "http://localhost:8081/politicacomercial/actualizar-tipomoneda/1",
+  "tipo": "PUT",
+  "tipoMonedaEntity": {
+		"idTipoMonedaEntity": 0,
+		"codigoTipoMonedaUpperCase": "uSd",
+		"nombreTipoMoneda": "Moneda gringa",
+		"simboloTipoMoneda": "$",
+		"estadoTipoMoneda": true,
+		"tipos_cambios_bases": null,
+		"tipos_cambios_destinos": null
+	}
+}
