@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table (name="pais")
 
 public class Pais{
-
+	
+	/*** Para generar las key en otros negocios es necesario que el id sea numerico ********/
 	@Id
 	@Column(name="codigo_portal_pais_lower_case")
 	private String codigoPortalPaisLowerCase;

@@ -38,14 +38,14 @@ public class CrearDataPoliticaComercialTests {
 
 	@Test
 	public void  crearDataPoliticaComercial() throws LogicaImplException {
-//		crearTipoMonedaTest();
-//		crearTipoNegocioTest();
-//		crearTipoFeeComisionTest();
-//		crearTipoValorComisionTest();
-//		crearPaisTest();
-//		crearTipoCambioTest();
+		crearTipoMonedaTest();
+		crearTipoNegocioTest();
+		crearTipoFeeComisionTest();
+		crearTipoValorComisionTest();
+		crearPaisTest();
+		crearTipoCambioTest();
 		crearProductoTipoFeeComisionTest();
-//		crearHistorialTipoCambioTest();
+		crearHistorialTipoCambioTest();
 		crearHistorialFeeComisionTest();
 	}
 
