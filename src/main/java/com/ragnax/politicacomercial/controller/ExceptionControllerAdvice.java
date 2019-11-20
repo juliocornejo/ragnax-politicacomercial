@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.ragnax.politicacomercial.controller.response.AbstractWrapperError;
 import com.ragnax.politicacomercial.controller.response.Response;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
-
-import vijnana.respuesta.wrapper.response.AbstractWrapperError;
 
 /**
  * Created by julito el mas lindo on 09-08-19.

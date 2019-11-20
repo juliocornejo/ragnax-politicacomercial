@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import vijnana.respuesta.wrapper.response.AbstractWrapper;
-import vijnana.respuesta.wrapper.response.AbstractWrapperError;
-
 @XmlRootElement(name="response")
 public class Response extends AbstractWrapper implements Serializable{
 

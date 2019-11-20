@@ -1,4 +1,4 @@
-package vijnana.respuesta.wrapper.response;
+package com.ragnax.politicacomercial.controller.response;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
