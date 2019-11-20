@@ -3,8 +3,6 @@ package com.ragnax.politicacomercial.servicio.utilidades;
 import com.ragnax.politicacomercial.entidad.ProductoFeeComision;
 import com.ragnax.politicacomercial.entidad.TipoCambio;
 
-import vijnana.utilidades.component.utilidades.excriptar.Encriptar1_1;
-
 public class UtilidadesPoliticaComercial {
 
 	public static String obtenerCodigoTipoCambio(TipoCambio objTipoCambio){

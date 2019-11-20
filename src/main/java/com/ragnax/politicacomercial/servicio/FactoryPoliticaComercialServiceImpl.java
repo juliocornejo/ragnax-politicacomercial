@@ -27,11 +27,10 @@ import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 import com.ragnax.politicacomercial.repository.FactoryPoliticaComercialDAO;
+import com.ragnax.politicacomercial.servicio.utilidades.AppDate;
+import com.ragnax.politicacomercial.servicio.utilidades.DateMapper;
+import com.ragnax.politicacomercial.servicio.utilidades.TipoFormatoFecha;
 import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComercial;
-
-import vijnana.utilidades.component.utilidades.AppDate;
-import vijnana.utilidades.component.utilidades.DateMapper;
-import vijnana.utilidades.component.utilidades.TipoFormatoFecha;
 
 @Service
 @CacheConfig(cacheNames = { "buscarTipoMoneda", "listarTodoTipoMoneda", "buscarTipoNegocio", 
