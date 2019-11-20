@@ -1,5 +1,5 @@
 def project = 'r-poc-247201'
-def appName = 'ragnax-politicacomercial'
+def appName = 'send-mail'
 def imageTag = "gcr.io/${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
 
 pipeline {
@@ -46,3 +46,4 @@ pipeline {
             }
         }
     }
+}
