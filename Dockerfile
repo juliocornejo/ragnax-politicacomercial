@@ -16,4 +16,4 @@ ARG APP_NAME=ragnax-politicacomercial-1.0.0.jar
 
 COPY --from=build ${DEPENDENCY}/${APP_NAME} /app/ragnax-politicacomercial.jar
 
-ENTRYPOINT ["java","-jar","/app/send-mail.jar"]
+ENTRYPOINT ["java","-jar","/app/ragnax-politicacomercial.jar"]
