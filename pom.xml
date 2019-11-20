@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.ragnax</groupId>
 	<artifactId>ragnax-politicacomercial</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>ragnax-politicacomercial</name>
 	<description>Demo project for Spring Boot</description>
 
