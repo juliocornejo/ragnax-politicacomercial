@@ -1,5 +1,8 @@
 package com.ragnax.politicacomercial.servicio.utilidades;
 
+import java.time.Duration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ragnax.politicacomercial.entidad.ProductoFeeComision;
 import com.ragnax.politicacomercial.entidad.TipoCambio;
 
@@ -60,5 +63,57 @@ public class UtilidadesPoliticaComercial {
 		}
 
 		return null;
+	}
+	
+	public static String limpiarPatronRUT(String textoRUT)  {
+		try {
+			
+			textoRUT = textoRUT.replace(".", "");
+			textoRUT = textoRUT.replace("-", "");
+
+			return textoRUT;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public static String generarPatronRUT(String textoRUT)  {
+		try {
+			textoRUT = limpiarPatronRUT(textoRUT);
+			
+			int cont = 0;
+			
+			String rutFormateado = "-" + textoRUT.substring(textoRUT.length() - 1);
+	        
+			for (int i = textoRUT.length() - 2; i >= 0; i--) {
+				rutFormateado = textoRUT.substring(i, i + 1) + rutFormateado;
+	            cont++;
+	            if (cont == 3 && i != 0) {
+	            	rutFormateado = "." + rutFormateado;
+	                cont = 0;
+	            }
+	        }
+	        return rutFormateado;
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public static <T> Object convertirJsonToObject(String string, Class<T> typeResponse ) throws Exception
+	{	
+
+		return new ObjectMapper().readValue(string, typeResponse);
+		
+	}
+	
+	public static String generarTiempoDuracion(Duration duration){
+		try{
+			return duration.getSeconds()+","+duration.getNano();
+		}catch(Exception e){
+			
+		}
+		return null;
+		
 	}
 } 

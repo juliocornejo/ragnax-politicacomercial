@@ -1,5 +1,6 @@
 package com.ragnax.politicacomercial.servicio.utilidades;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,9 @@ public class Encriptar1_1 {
 	}
 	
 	public static String generarCodigoByNumeroByEncodear (String simpleCambio, String textoEncodear) throws Exception{
-
+		
+		java.util.Base64.Encoder encoder = java.util.Base64.getEncoder();
+		
 		try {
 			Map<String, String> mapaCambio = new HashMap<String, String>();
 
@@ -59,7 +62,9 @@ public class Encriptar1_1 {
 			for(int i=0; i < arraySplit.length; i++) {
 				respuesta[i] = mapaCambio.get(arraySplit[i]);
 			}
-			return String.join("", respuesta)+"-"+SimpleDecodificacion.getBase64(textoEncodear);
+			
+			return String.join("", respuesta)+"-"+ encoder.encodeToString(textoEncodear.getBytes(StandardCharsets.UTF_8) );
+		
 			
 		}
 		catch (Exception ex) {

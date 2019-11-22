@@ -29,7 +29,7 @@ import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 import com.ragnax.politicacomercial.servicio.FactoryPoliticaComercialService;
-import com.ragnax.politicacomercial.servicio.utilidades.AppDate;
+import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComercial;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 @RestController
-@RequestMapping(value = { "${url.app.controller}" })
+@RequestMapping(value = { "${servicio.app.controller}" })
 public class PoliticaComercialController {
 	
 	/****@GetMapping  no soporta Errors****/
@@ -49,7 +49,7 @@ public class PoliticaComercialController {
 	FactoryPoliticaComercialService factoryPoliticaComercialService;
 
 	
-	@GetMapping(value = "${url.app.servicio.limpiarCache}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.limpiarCache}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public void clearAllCaches() {
 		factoryPoliticaComercialService.limpiarCacheLocal();
 	}
@@ -63,14 +63,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearTipoMoneda(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoMoneda objTipoMoneda, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 		
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoMoneda(
-				objTipoMoneda), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -80,7 +80,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PutMapping(value = "${url.app.servicio.actualizarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "${servicio.app.uri.actualizarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  actualizarTipoMoneda(
 			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoMoneda objTipoMoneda,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
@@ -89,7 +89,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoMoneda(
-				Integer.parseInt(id), objTipoMoneda), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -99,14 +99,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoMoneda(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoMoneda(
-				new TipoMoneda(Integer.parseInt(id))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoMoneda(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -117,13 +117,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoMoneda(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoMoneda(), 
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -136,14 +136,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoNegocio objTipoNegocio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 		
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoNegocio(
-				objTipoNegocio), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -153,7 +153,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PutMapping(value = "${url.app.servicio.actualizarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "${servicio.app.uri.actualizarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  actualizarTipoNegocio(
 			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoNegocio objTipoNegocio,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
@@ -162,7 +162,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoNegocio(
-				Integer.parseInt(id), objTipoNegocio), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -172,13 +172,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoNegocio(
-				new TipoNegocio(Integer.parseInt(id))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoNegocio(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -189,13 +189,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
 
-	@GetMapping(value = "${url.app.servicio.listarTodoTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoNegocio(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoNegocio(), 
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -209,14 +209,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearTipoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoFeeComision objTipoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoFeeComision(
-				objTipoFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -226,7 +226,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PutMapping(value = "${url.app.servicio.actualizarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "${servicio.app.uri.actualizarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  actualizarTipoFeeComision(
 			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoFeeComision objTipoFeeComision,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
@@ -235,7 +235,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoFeeComision(
-				Integer.parseInt(id), objTipoFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -245,14 +245,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoFeeComision(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoFeeComision(
-				new TipoFeeComision(Integer.parseInt(id))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoFeeComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -262,13 +262,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoFeeComision(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoFeeComision(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -282,14 +282,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoValorComision objTipoValorComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoValorComision(
-				objTipoValorComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				objTipoValorComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -299,13 +299,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoValorComision(
-				new TipoValorComision(Integer.parseInt(id))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoValorComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -315,12 +315,12 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoValorComision(HttpServletRequest request)  throws LogicaImplException{
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoValorComision(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -333,14 +333,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearPais}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearPais}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearPais(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid Pais objPais, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearPais(
-				objPais), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -350,7 +350,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PutMapping(value = "${url.app.servicio.actualizarPais}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "${servicio.app.uri.actualizarPais}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  actualizarPais(
 			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid Pais objPais,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal, 
@@ -359,7 +359,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarPais(
-				codigoportal , objPais), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigoportal , objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -369,14 +369,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	}) 
-	@GetMapping(value = "${url.app.servicio.buscarPaisxCodigoPortal}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarPaisxCodigoPortal}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarPaisxCodigoPortal(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarPaisxCodigoPortal(
-				new  Pais(codigoportal)) , AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new  Pais(codigoportal)) , UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -386,13 +386,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoPais}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoPais}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoPais(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoPais(), 
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -405,14 +405,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.generarCodigoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.generarCodigoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  generarCodigoTipoCambioxTipoMonedaBasexTipoMonedaCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarCodigoTipoCambio(
-				objTipoCambio), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -422,14 +422,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoCambio(
-				objTipoCambio), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -439,14 +439,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarTipoCambioxCodigo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarTipoCambioxCodigo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoCambioxCodigo(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoCambioxCodigo(
-				new TipoCambio(codigotipocambio)), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoCambio(codigotipocambio)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -456,13 +456,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoCambio(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoCambio(), 
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -473,14 +473,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTipoCambioxTipoMonedaBase}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTipoCambioxTipoMonedaBase}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTipoCambioxTipoMonedaBase(HttpServletRequest request,
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String idtipomonedabase)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTipoCambioxTipoMonedaBase(
-				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -494,14 +494,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.generarCodigoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.generarCodigoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  generarCodigoProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarNuevoCodigoProductoFeeComision(
-				objProductoFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -511,14 +511,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearProductoFeeComision(
-				objProductoFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -528,7 +528,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PutMapping(value = "${url.app.servicio.actualizarProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "${servicio.app.uri.actualizarProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  actualizarProductoFeeComision(
 			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid ProductoFeeComision objProductoFeeComision,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision, 
@@ -537,7 +537,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarProductoFeeComision(
-				codigoproductofeecomision, objProductoFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigoproductofeecomision, objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -547,14 +547,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	}) 
-	@GetMapping(value = "${url.app.servicio.buscarProductoFeeComisionxCodigoProductoServicio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarProductoFeeComisionxCodigoProductoServicio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarProductoFeeComisionxCodigoProductoServicio(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductoservicio)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarProductoFeeComisionxCodigoProductoServicio(
-				new ProductoFeeComision(codigoproductoservicio)) , AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new ProductoFeeComision(codigoproductoservicio)) , UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -564,13 +564,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoProductoFeeComision(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoProductoFeeComision(), 
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -582,7 +582,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
 
-	@GetMapping(value = "${url.app.servicio.listarProductoFeeComisionxTipoNegocioxEstado}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarProductoFeeComisionxTipoNegocioxEstado}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarProductoFeeComisionxTipoNegocioxEstado(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String tiponegocio
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "false") @PathVariable String estadoproductoservicio)  throws LogicaImplException{
@@ -590,7 +590,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarProductoFeeComisionxTipoNegocioxEstado(
-				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -604,7 +604,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearHistorialTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialTipoCambio objHistorialTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
@@ -613,7 +613,7 @@ public class PoliticaComercialController {
 		factoryPoliticaComercialService.limpiarCacheLocal();
 		/****Limpiar Cache****/
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialTipoCambio(
-				objHistorialTipoCambio), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objHistorialTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -623,14 +623,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarHistorialTipoCambioxTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarHistorialTipoCambioxTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarHistorialTipoCambioxTipoCambioxActivo(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialTipoCambioxTipoCambioxActivo(
-				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -640,13 +640,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarHistorialTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarHistorialTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarHistorialTipoCambioxActivo(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxActivo(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -656,7 +656,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarHistorialTipoCambioxTipoCambioEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarHistorialTipoCambioxTipoCambioEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarHistorialTipoCambioxTipoCambioEntreFechas(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
@@ -665,7 +665,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxTipoCambioEntreFechas(
-				codigotipocambio, fechainicial, fechafinal), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigotipocambio, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -675,14 +675,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoHistorialTipoCambio(HttpServletRequest request
 			)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialTipoCambio(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -696,7 +696,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@PostMapping(value = "${url.app.servicio.crearHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "${servicio.app.uri.crearHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  crearHistorialFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialFeeComision objHistorialFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
@@ -705,7 +705,7 @@ public class PoliticaComercialController {
 		factoryPoliticaComercialService.limpiarCacheLocal();
 		/****Limpiar Cache****/
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialFeeComision(
-				objHistorialFeeComision), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objHistorialFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -715,14 +715,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.buscarHistorialFeeComisionxCodigoProductoFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.buscarHistorialFeeComisionxCodigoProductoFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarHistorialFeeComisionxProductoFeeComisionxActivo(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialFeeComisionxProductoFeeComisionxActivo(
-				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -732,14 +732,14 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarTodoHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarTodoHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoHistorialFeeComision(HttpServletRequest request
 			)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialFeeComision(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -749,13 +749,13 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarHistorialFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarHistorialFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarHistorialFeeComisionxActivo(HttpServletRequest request)  throws LogicaImplException{
 
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxActivo(),
-				AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),request.getRequestURI()), HttpStatus.OK);
+				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),request.getRequestURI()), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Listar Historial Fee Comision por productofeecomision entre fechas", response = Response.class)
@@ -764,7 +764,7 @@ public class PoliticaComercialController {
 			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
 			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
 	})
-	@GetMapping(value = "${url.app.servicio.listarHistorialFeeComisionxProductoFeeComisionEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "${servicio.app.uri.listarHistorialFeeComisionxProductoFeeComisionEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarFeeComisionxProductoFeeComisionEntreFechas(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
@@ -773,7 +773,7 @@ public class PoliticaComercialController {
 		Instant start = Instant.now();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxProductoFeeComisionEntreFechas(
-				codigoproductofeecomision, fechainicial, fechafinal), AppDate.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				codigoproductofeecomision, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 }

@@ -1,20 +1,22 @@
 package com.ragnax.politicacomercial.servicio;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ragnax.politicacomercial.configuration.FactoryApiProperties;
 import com.ragnax.politicacomercial.controller.response.PoliticaComercial;
 import com.ragnax.politicacomercial.entidad.HistorialFeeComision;
 import com.ragnax.politicacomercial.entidad.HistorialTipoCambio;
@@ -27,9 +29,6 @@ import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 import com.ragnax.politicacomercial.repository.FactoryPoliticaComercialDAO;
-import com.ragnax.politicacomercial.servicio.utilidades.AppDate;
-import com.ragnax.politicacomercial.servicio.utilidades.DateMapper;
-import com.ragnax.politicacomercial.servicio.utilidades.TipoFormatoFecha;
 import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComercial;
 
 @Service
@@ -39,14 +38,14 @@ import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComerc
 		"listarTipoCambioxTipoMonedaBase",
 		"listarTodoTipoCambio", "buscarProductoFeeComisionxCodigo",
 		"listarTodoProductoFeeComision"})
-
+@ComponentScan(basePackageClasses = { FactoryApiProperties.class})
 public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComercialService {
 	//Segun se necesite se van creando llamadas al repositorio para devolver entities.
 	@Autowired
 	private FactoryPoliticaComercialDAO factoryPoliticaComercialDAO;
-
-	private static final boolean estadoActivoConsulta = true;
-	private static final boolean estadoInactivoConsulta= false;
+	
+	@Autowired
+	private FactoryApiProperties factoryApiProperties;
 
 	/***********************************************************/
 	/****** TipoMoneda TipoMoneda TipoMoneda *******************/
@@ -56,7 +55,9 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		
 		try {
-
+			
+			
+			
 			Pageable pageByCodigoMoneda = PageRequest.of(0, 1, Sort.by("codigoTipoMonedaUpperCase").descending());
 			/*Codigo debe existir por el id, y el nombre no debe existir*/
 			Page<TipoMoneda> pageCodigoTipoMoneda  = factoryPoliticaComercialDAO.getTipoMonedaRepository().findByCodigoTipoMonedaUpperCase(objTipoMoneda.getCodigoTipoMonedaUpperCase().toUpperCase(), pageByCodigoMoneda);
@@ -74,7 +75,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 				/*Siempre hacer mayusculas los codigos**/
 				objTipoMoneda.setCodigoTipoMonedaUpperCase(objTipoMoneda.getCodigoTipoMonedaUpperCase().toUpperCase());
 				objTipoMoneda.setNombreTipoMonedaLowerCase(objTipoMoneda.getNombreTipoMoneda().toLowerCase());
-				objTipoMoneda.setEstadoTipoMoneda(true);
+				objTipoMoneda.setEstadoTipoMoneda(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 				objTipoMoneda.setIdTipoMoneda(idTipoMoneda);
 
 				factoryPoliticaComercialDAO.getTipoMonedaRepository().save(objTipoMoneda);
@@ -309,7 +310,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 				objTipoFeeComision.setIdTipoFeeComision(idTipoFeeComision);
 
-				objTipoFeeComision.setEstadoTipoFeeComision(true);
+				objTipoFeeComision.setEstadoTipoFeeComision(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 				factoryPoliticaComercialDAO.getTipoFeeComisionRepository().save(objTipoFeeComision);
 
@@ -524,20 +525,8 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 			Page<Pais> pageNombrePortalPais  = factoryPoliticaComercialDAO.getPaisRepository().findByNombrePaisLowerCase(objPais.getNombrePais().toLowerCase(), pageByNombrePortalPais);
 
 			if(pageCodigoPortalPais.isEmpty() && pageNombrePortalPais.isEmpty()){
-//				Pageable pageByidDesc = PageRequest.of(0, 1, Sort.by("idPais").descending());
-//
-//				Page<Pais> pageIdPais = factoryPoliticaComercialDAO.getPaisRepository().findAll(pageByidDesc);
-//
-//				if(!pageIdPais.isEmpty()) {
-//					idPais = ((Integer) pageIdPais.getContent().get(0).getIdPais() > 0) ?
-//							(Integer) pageIdPais.getContent().get(0).getIdPais()+ 1: null;
-//
-//					if(idPais==null)
-//						throw new LogicaImplException("No se puede crear Pais, error al obtener idPais");
-//				}
-//
-//				objPais.setIdPais(idPais);
-				objPais.setEstadoPais(true);
+;
+				objPais.setEstadoPais(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 				
 				objPais.setNombrePaisLowerCase(objPais.getNombrePais().toLowerCase());
 
@@ -774,52 +763,6 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 	/******ProductoPoliticaComercial ProductoPoliticaComercial *************/
 	/***********************************************************/
 	
-//public PoliticaComercial generarCodigoTipoCambio(TipoCambio objTipoCambio) throws LogicaImplException{
-//		
-//		PoliticaComercial politicaComercial = new PoliticaComercial();
-//		try {
-//			if((objTipoCambio.getIdTipoMonedaBase().getIdTipoMoneda()>0 && objTipoCambio.getIdTipoMonedaCambio().getIdTipoMoneda()>0)){
-//				if(buscarTipoMoneda(objTipoCambio.getIdTipoMonedaBase()).getTipoMoneda().getEstadoTipoMoneda()){ //Obtener Moneda Base
-//					if(buscarTipoMoneda(objTipoCambio.getIdTipoMonedaCambio()).getTipoMoneda().getEstadoTipoMoneda()){ //Obtener Moneda de Cambio
-//
-//						String codigoTipoCambio = UtilidadesPoliticaComercial.obtenerCodigoTipoCambio(objTipoCambio);
-//
-//						Pageable pageByCodigoTipoCambio = PageRequest.of(0, 1, Sort.by("codigoTipoCambio").descending());
-//
-//						Page<TipoCambio> pageCodigoTipoCambio  = factoryPoliticaComercialDAO.getTipoCambioRepository().
-//								findByCodigoTipoCambio(codigoTipoCambio, pageByCodigoTipoCambio);
-//
-//						if(pageCodigoTipoCambio.isEmpty()){
-//							TipoCambio tipoCambio = factoryPoliticaComercialDAO.getTipoCambioRepository().
-//									findByIdTipoMonedaBaseAndIdTipoMonedaCambio(
-//											objTipoCambio.getIdTipoMonedaBase(), 
-//											objTipoCambio.getIdTipoMonedaCambio());
-//							if(tipoCambio== null || tipoCambio.getCodigoTipoCambio()==null || tipoCambio.getCodigoTipoCambio().equals("")){
-//								objTipoCambio.setCodigoTipoCambio(codigoTipoCambio);
-//								politicaComercial.setTipoCambio(objTipoCambio);
-//							}else {
-//								throw new LogicaImplException("No se puede crear TipoCambio, parametros ya existen en identificador valido");
-//							}
-//
-//						}else {
-//							throw new LogicaImplException("No se puede crear TipoCambio, codigo ya existe con identificador valido");
-//						}
-//					}else {
-//						throw new LogicaImplException("No se puede crear TipoCambio, moneda cambio invalida");
-//					}
-//				}else {
-//					throw new LogicaImplException("No se puede crear TipoCambio, moneda base invalida");
-//				}
-//			}else {
-//				throw new LogicaImplException("No se puede crear TipoCambio, datos de moneda invalidos");
-//			}
-//		} catch (Exception e) {
-//			throw new LogicaImplException(e.getMessage());
-//		}
-//
-//		return politicaComercial;
-//	}
-	
 	public PoliticaComercial generarNuevoCodigoProductoFeeComision(ProductoFeeComision objProductoFeeComision) throws LogicaImplException{
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
@@ -887,7 +830,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 						if(productoFeeComision!=null){
 							throw new LogicaImplException("No se puede crear ProductoFeeComision, parametros ya existen en identificador valido");
 						}
-						objProductoFeeComision.setEstadoProductoFeeComision(true);
+						objProductoFeeComision.setEstadoProductoFeeComision(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 						factoryPoliticaComercialDAO.getProductoFeeComisionRepository().save(objProductoFeeComision);
 
@@ -1007,20 +950,21 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
-		String ahoraYYYY_MM_ddTHH_MM_SSZ = AppDate.obtenerFechaEnFormato(new Date(), TipoFormatoFecha.YYYY_MM_ddTHH_MM_SSZ);
+		Timestamp tsInicial = new Timestamp(LocalDate.now().toDate().getTime());
 
 		try {	
 
 			HistorialTipoCambio repHistorialTipoCambio = (objHistorialTipoCambio!=null) ?
 					factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().findByIdTipoCambioAndEstadoHistorialTipoCambio
-					(buscarTipoCambioxCodigo(objHistorialTipoCambio.getIdTipoCambio()).getTipoCambio(), estadoActivoConsulta) : null;
+					(buscarTipoCambioxCodigo(objHistorialTipoCambio.getIdTipoCambio()).getTipoCambio(), 
+							Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta())) : null;
 
 					/**Solo Puede haber activo un tipo de HistorialTipoCambio por TipoCambio*/
 					if(repHistorialTipoCambio!=null && repHistorialTipoCambio.getIdHistorialTipoCambio()>0){
 						/***aqui a la respuesta del repositorio, actualizar el estado a inactivo***/
 
-						repHistorialTipoCambio.setEstadoHistorialTipoCambio(estadoInactivoConsulta);
-						repHistorialTipoCambio.setFechaFinalTipoCambio(DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(ahoraYYYY_MM_ddTHH_MM_SSZ));
+						repHistorialTipoCambio.setEstadoHistorialTipoCambio(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
+						repHistorialTipoCambio.setFechaFinalTipoCambio(tsInicial);
 						factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().save(repHistorialTipoCambio);
 					}
 					/******* Obtener el ultimo de la lista de HistorialTipoCambio ******/
@@ -1034,8 +978,8 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 					//siempre guardar objHistorialTipoCambio
 					objHistorialTipoCambio.setIdHistorialTipoCambio(idHistorialTipoCambio);
-					objHistorialTipoCambio.setFechaInicioTipoCambio(DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(ahoraYYYY_MM_ddTHH_MM_SSZ));
-					objHistorialTipoCambio.setEstadoHistorialTipoCambio(estadoActivoConsulta);
+					objHistorialTipoCambio.setFechaInicioTipoCambio(tsInicial);
+					objHistorialTipoCambio.setEstadoHistorialTipoCambio(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 					factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().save(objHistorialTipoCambio);
 
@@ -1056,7 +1000,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		try {
 
 			HistorialTipoCambio repHistorialTipoCambio = factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().findByIdTipoCambioAndEstadoHistorialTipoCambio
-					(objHistorialTipoCambio.getIdTipoCambio(), estadoActivoConsulta);
+					(objHistorialTipoCambio.getIdTipoCambio(), Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 			/***Si existe reemplazar por el nuevo*/
 			if(repHistorialTipoCambio!=null && repHistorialTipoCambio.getIdHistorialTipoCambio()>0){
@@ -1079,7 +1023,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		try {
 			List<HistorialTipoCambio> repListaHistorialTipoCambio = factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().
-					findAllByEstadoHistorialTipoCambio(estadoActivoConsulta);
+					findAllByEstadoHistorialTipoCambio(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 			if(repListaHistorialTipoCambio!=null && !repListaHistorialTipoCambio.isEmpty()){
 				politicaComercial.setListaHistorialTipoCambio(repListaHistorialTipoCambio);
@@ -1100,11 +1044,11 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		try {
 
 			buscarTipoCambioxCodigo(new TipoCambio(codigoTipoCambio));
-
-			Timestamp tsInicial = DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(sFechaInicial);
-
-			Timestamp tsFinal = DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(sFechaFinal);
-
+			
+			Timestamp tsInicial = new Timestamp(LocalDate.parse(sFechaInicial).toDate().getTime());
+			
+			Timestamp tsFinal = new Timestamp(LocalDate.parse(sFechaFinal).toDate().getTime());
+			
 			List<HistorialTipoCambio> repListaHistorialTipoCambio = factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().
 					findAllByIdTipoCambioAndFechaInicioTipoCambioBetween(new TipoCambio(codigoTipoCambio), tsInicial, tsFinal);
 
@@ -1146,8 +1090,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
-
-		String ahoraYYYY_MM_ddTHH_MM_SSZ = AppDate.obtenerFechaEnFormato(new Date(), TipoFormatoFecha.YYYY_MM_ddTHH_MM_SSZ);
+		Timestamp tsInicial = new Timestamp(LocalDate.now().toDate().getTime());
 
 		try {
 			TipoValorComision feeTipoValorComision = buscarTipoValorComision(objHistorialFeeComision.getIdTipoValorComision()).getTipoValorComision();
@@ -1158,15 +1101,15 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 				HistorialFeeComision repHistorialFeeComision = (objHistorialFeeComision!=null) ?
 						factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().findByIdProductoFeeComisionAndEstadoFeeComision
-						(feeProductoPoliticaComercial, estadoActivoConsulta) : null;
+						(feeProductoPoliticaComercial, Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta())) : null;
 
 						/**Solo Puede haber activo un tipo de HistorialPoliticaComercial por ProductoFeeComision*/
 
 						if(repHistorialFeeComision!=null && repHistorialFeeComision.getIdHistorialFeeComision()>0){
 							/***aqui a la respuesta del repositorio, actualizar el estado a inactivo***/
 
-							repHistorialFeeComision.setEstadoFeeComision(estadoInactivoConsulta);
-							repHistorialFeeComision.setFechaFinalFeeComision(DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(ahoraYYYY_MM_ddTHH_MM_SSZ));
+							repHistorialFeeComision.setEstadoFeeComision(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
+							repHistorialFeeComision.setFechaFinalFeeComision(tsInicial);
 							factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().save(repHistorialFeeComision);
 
 						}
@@ -1183,13 +1126,13 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 						objHistorialFeeComision.setIdHistorialFeeComision(idHistorialFeeComision);
 						objHistorialFeeComision.setIdProductoFeeComision(feeProductoPoliticaComercial);
 						objHistorialFeeComision.setIdTipoValorComision(feeTipoValorComision);
-						objHistorialFeeComision.setFechaInicioFeeComision(DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(ahoraYYYY_MM_ddTHH_MM_SSZ));
-						objHistorialFeeComision.setEstadoFeeComision(estadoActivoConsulta);
+						objHistorialFeeComision.setFechaInicioFeeComision(tsInicial);
+						objHistorialFeeComision.setEstadoFeeComision(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 						factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().save(objHistorialFeeComision);
 
 						repHistorialFeeComision = factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().findByIdProductoFeeComisionAndEstadoFeeComision
-								(objHistorialFeeComision.getIdProductoFeeComision(), estadoActivoConsulta);
+								(objHistorialFeeComision.getIdProductoFeeComision(), Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 						politicaComercial.setHistorialFeeComision(repHistorialFeeComision);
 			}else {
@@ -1214,7 +1157,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 			/***buscar por el codigo productoFeeComision****/
 
 			HistorialFeeComision repHistorialFeeComision = factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().findByIdProductoFeeComisionAndEstadoFeeComision
-					(buscarProductoFeeComisionxCodigoProductoServicio(objHistorialFeeComision.getIdProductoFeeComision()).getProductoFeeComision(), estadoActivoConsulta);
+					(buscarProductoFeeComisionxCodigoProductoServicio(objHistorialFeeComision.getIdProductoFeeComision()).getProductoFeeComision(), Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 			if(repHistorialFeeComision!=null && repHistorialFeeComision.getIdHistorialFeeComision()>0){
 
 				politicaComercial.setHistorialFeeComision(repHistorialFeeComision);
@@ -1257,7 +1200,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		try {
 			List<HistorialFeeComision> repListaHistorialFeeComision = factoryPoliticaComercialDAO.getHistorialFeeComisionRepository().
-					findAllByEstadoFeeComision(estadoActivoConsulta);
+					findAllByEstadoFeeComision(Boolean.parseBoolean(factoryApiProperties.getEstado().getEstadoActivoConsulta()));
 
 			if(repListaHistorialFeeComision!=null && !repListaHistorialFeeComision.isEmpty()){
 				politicaComercial.setListaHistorialFeeComision(repListaHistorialFeeComision);
@@ -1276,9 +1219,9 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
-			Timestamp tsInicial = DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(sFechaInicial);
-
-			Timestamp tsFinal = DateMapper.mapperSimplyDateFormatYYYY_MM_DDTHH_MM_SSZToTimeStamp(sFechaFinal);
+			Timestamp tsInicial = new Timestamp(LocalDate.parse(sFechaInicial).toDate().getTime());
+			
+			Timestamp tsFinal = new Timestamp(LocalDate.parse(sFechaFinal).toDate().getTime());
 
 			ProductoFeeComision feeProductoPoliticaComercial = buscarProductoFeeComisionxCodigoProductoServicio(new ProductoFeeComision(codigoProductoFeeComision)).getProductoFeeComision();
 
@@ -1325,77 +1268,77 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 	@CacheEvict(value="buscarTipoMoneda", allEntries=true)
 	private void evictBuscarTipoMoneda() {
-		System.out.println("Evicting buscarTipoMoneda");
+		System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoMoneda());
 	}
 
 	@CacheEvict(value="listarTodoTipoMoneda", allEntries=true)
 	private void evictListarTodoTipoMoneda() {
-		System.out.println("Evicting listarTodoTipoMoneda");
+		System.out.println(factoryApiProperties.getCache().getEvictListarTodoTipoMoneda());
 	}
 	
 	@CacheEvict(value="buscarTipoNegocio", allEntries=true)
     private void evictBuscarTipoNegocio() {
-        System.out.println("Evicting buscarTipoNegocio");
+        System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoNegocio());
     }
 	
 	@CacheEvict(value="listarTodoTipoNegocio", allEntries=true)
 	private void evictListarTodoTipoNegocio() {
-        System.out.println("Evicting listarTodoTipoNegocio");
+        System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoNegocio());
     }
 	
 	@CacheEvict(value="buscarTipoFeeComision", allEntries=true)
 	private void evictBuscarTipoFeeComision() {
-        System.out.println("Evicting buscarTipoFeeComision");
+		System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoFeeComision());
     }
 	
 	@CacheEvict(value="listarTodoTipoFeeComision", allEntries=true)
 	private void evictListarTodoTipoFeeComision() {
-        System.out.println("Evicting listarTodoTipoFeeComision");
+        System.out.println(factoryApiProperties.getCache().getEvictListarTodoTipoFeeComision());
     }
 	
 	@CacheEvict(value="buscarTipoValorComision", allEntries=true)
     private void evictBuscarTipoValorComision() {
-        System.out.println("Evicting buscarTipoValorComision");
+        System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoValorComision());
     }
 	
 	@CacheEvict(value="listarTodoTipoValorComision", allEntries=true)
 	private void evictListarTodoTipoValorComision() {
-        System.out.println("Evicting listarTodoTipoValorComision");
+        System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoValorComision());
     }
 	
 	@CacheEvict(value="buscarPaisxCodigoPortal", allEntries=true)
 	private void evictBuscarPaisxCodigoPortal() {
-		System.out.println("Evicting buscarPaisxCodigoPortal");
+		System.out.println(factoryApiProperties.getCache().getEvictBuscarPaisxCodigoPortal());
 	}
 	
 	@CacheEvict(value="listarTodoPais", allEntries=true)
 	private void evictListarTodoPais() {
-		System.out.println("Evicting listarTodoPais");
+		System.out.println(factoryApiProperties.getCache().getEvictListarTodoPais());
 	}
 	
 	@CacheEvict(value="buscarTipoCambioxCodigo", allEntries=true)
 	private void evictBuscarTipoCambioxCodigo() {
-		System.out.println("Evicting buscarTipoCambioxCodigo");
+		System.out.println(factoryApiProperties.getCache().getEvictBuscarTipoCambioxCodigo());
 	}
 	
 	@CacheEvict(value="listarTipoCambioxTipoMonedaBase", allEntries=true)
 	private void evictListarTipoCambioxTipoMonedaBase() {
-		System.out.println("Evicting listarTipoCambioxTipoMonedaBase");
+		System.out.println(factoryApiProperties.getCache().getEvictListarTipoCambioxTipoMonedaBase());
 	}
 	
 	@CacheEvict(value="listarTodoTipoCambio", allEntries=true)
 	private void evictListarTodoTipoCambio() {
-		System.out.println("Evicting listarTodoTipoCambio");
+		System.out.println(factoryApiProperties.getCache().getEvictListarTodoTipoCambio());
 	}
 	
 	@CacheEvict(value="buscarProductoFeeComisionxCodigo", allEntries=true)
 	private void evictBuscarProductoFeeComisionxCodigo() {
-        System.out.println("Evicting buscarProductoFeeComisionxCodigo");
+        System.out.println(factoryApiProperties.getCache().getEvictBuscarProductoFeeComisionxCodigo());
     }
 	
 	@CacheEvict(value="listarTodoProductoFeeComision", allEntries=true)
 	private void evictListarTodoProductoFeeComision() {
-        System.out.println("Evicting listarTodoProductoFeeComision");
+        System.out.println(factoryApiProperties.getCache().getEvictListarTodoProductoFeeComision());
     }
 	
 }

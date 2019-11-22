@@ -1,10 +1,6 @@
 //package com.ragnax.ragnaxpoliticacomercial;
 //
 //
-//import java.util.List;
-//import java.math.BigDecimal;
-//import java.util.Date;
-//
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +19,6 @@
 //import com.ragnax.politicacomercial.entidad.TipoValorComision;
 //import com.ragnax.politicacomercial.exception.LogicaImplException;
 //import com.ragnax.politicacomercial.servicio.FactoryPoliticaComercialService;
-//
-//import vijnana.utilidades.component.utilidades.AppDate;
-//import vijnana.utilidades.component.utilidades.TipoFormatoFecha;
 //
 //@RunWith(SpringRunner.class)
 //
@@ -63,7 +56,7 @@
 //		factoryPoliticaComercialService.crearTipoMoneda(tipoMonedaC);
 //		factoryPoliticaComercialService.crearTipoMoneda(tipoMonedaD);
 //		factoryPoliticaComercialService.crearTipoMoneda(tipoMonedaE);
-////		
+//		
 //	}
 //	
 //	public void crearTipoNegocioTest() throws LogicaImplException {
