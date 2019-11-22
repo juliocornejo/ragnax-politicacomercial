@@ -1,6 +1,13 @@
 package com.ragnax.politicacomercial.servicio.utilidades;
 
-import java.time.Duration;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import org.joda.time.Duration;
+import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ragnax.politicacomercial.entidad.ProductoFeeComision;
@@ -109,11 +116,52 @@ public class UtilidadesPoliticaComercial {
 	
 	public static String generarTiempoDuracion(Duration duration){
 		try{
-			return duration.getSeconds()+","+duration.getNano();
+			return duration.getStandardSeconds()+","+duration.getMillis();
 		}catch(Exception e){
 			
 		}
 		return null;
 		
 	}
+	
+	public static Timestamp convertirStrFechaConFormatToTimestamp(String sFecha, String formato) {
+		//    	SimpleDateFormat formatInicial = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); 2019-10-22T10:30:00
+		
+		Timestamp retorno = new Timestamp(new Date().getTime());
+		
+		if(isValidDate(sFecha, formato)){
+			try{
+
+				int ano1 = Integer.parseInt(sFecha.substring(0, 4));
+				int mes1 = Integer.parseInt(sFecha.substring(5, 7));
+				int dia1 = Integer.parseInt(sFecha.substring(8, 10));
+				int hora1 = Integer.parseInt(sFecha.substring(11, 13));
+				int minuto1 = Integer.parseInt(sFecha.substring(14, 16));
+				int seg1 = Integer.parseInt(sFecha.substring(17, 19));
+				
+				retorno = new Timestamp(new LocalDateTime(ano1, mes1, dia1, hora1, minuto1, seg1).toDate().getTime());
+
+			}catch(Exception e){
+				
+			}
+		}else{
+			
+		}
+
+		return retorno;
+	}
+	
+	public static boolean isValidDate(String value, String strFormat){
+		SimpleDateFormat sdf = new SimpleDateFormat(strFormat);
+		try{
+			sdf.setLenient(false);
+			sdf.parse(value);
+			return true;
+		}
+		catch(ParseException e){
+			return false;
+		}
+	}
+	
+	Date fechaFinal = new LocalDateTime(2019, 12, 31, 0, 0, 1).toDate();
 } 

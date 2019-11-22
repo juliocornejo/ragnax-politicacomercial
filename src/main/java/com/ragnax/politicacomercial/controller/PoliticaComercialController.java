@@ -1,8 +1,5 @@
 package com.ragnax.politicacomercial.controller;
 
-import java.time.Duration;
-import java.time.Instant;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -37,6 +34,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -67,10 +66,12 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearTipoMoneda(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoMoneda objTipoMoneda, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
+		
+		;
 		
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoMoneda(
-				objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -86,10 +87,10 @@ public class PoliticaComercialController {
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoMoneda(
-				Integer.parseInt(id), objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -103,10 +104,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarTipoMoneda(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoMoneda(
-				new TipoMoneda(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoMoneda(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -120,10 +121,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoMoneda(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoMoneda(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -140,10 +141,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoNegocio objTipoNegocio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 		
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoNegocio(
-				objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -159,10 +160,10 @@ public class PoliticaComercialController {
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoNegocio(
-				Integer.parseInt(id), objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -175,10 +176,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.buscarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoNegocio(
-				new TipoNegocio(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoNegocio(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -192,10 +193,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoNegocio(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoNegocio(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -213,10 +214,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearTipoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoFeeComision objTipoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoFeeComision(
-				objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -232,10 +233,10 @@ public class PoliticaComercialController {
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoFeeComision(
-				Integer.parseInt(id), objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				Integer.parseInt(id), objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -249,10 +250,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarTipoFeeComision(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoFeeComision(
-				new TipoFeeComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoFeeComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -265,10 +266,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoFeeComision(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoFeeComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -286,10 +287,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoValorComision objTipoValorComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoValorComision(
-				objTipoValorComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				objTipoValorComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -302,10 +303,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.buscarTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  buscarTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoValorComision(
-				new TipoValorComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new TipoValorComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -317,10 +318,10 @@ public class PoliticaComercialController {
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoValorComision(HttpServletRequest request)  throws LogicaImplException{
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoValorComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -337,10 +338,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearPais(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid Pais objPais, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearPais(
-				objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -356,10 +357,10 @@ public class PoliticaComercialController {
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarPais(
-				codigoportal , objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigoportal , objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -373,10 +374,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarPaisxCodigoPortal(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarPaisxCodigoPortal(
-				new  Pais(codigoportal)) , UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new  Pais(codigoportal)) , UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -389,10 +390,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoPais}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoPais(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoPais(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -409,10 +410,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  generarCodigoTipoCambioxTipoMonedaBasexTipoMonedaCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarCodigoTipoCambio(
-				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -426,10 +427,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoCambio(
-				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -443,10 +444,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarTipoCambioxCodigo(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoCambioxCodigo(
-				new TipoCambio(codigotipocambio)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoCambio(codigotipocambio)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -459,10 +460,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoTipoCambio(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoCambio(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -477,10 +478,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  listarTipoCambioxTipoMonedaBase(HttpServletRequest request,
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String idtipomonedabase)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTipoCambioxTipoMonedaBase(
-				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 
 	}
@@ -498,10 +499,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  generarCodigoProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarNuevoCodigoProductoFeeComision(
-				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -515,10 +516,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearProductoFeeComision(
-				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -534,10 +535,10 @@ public class PoliticaComercialController {
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarProductoFeeComision(
-				codigoproductofeecomision, objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigoproductofeecomision, objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -551,10 +552,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarProductoFeeComisionxCodigoProductoServicio(HttpServletRequest request,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductoservicio)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarProductoFeeComisionxCodigoProductoServicio(
-				new ProductoFeeComision(codigoproductoservicio)) , UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new ProductoFeeComision(codigoproductoservicio)) , UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -567,10 +568,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarTodoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarTodoProductoFeeComision(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoProductoFeeComision(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -587,10 +588,10 @@ public class PoliticaComercialController {
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String tiponegocio
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "false") @PathVariable String estadoproductoservicio)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarProductoFeeComisionxTipoNegocioxEstado(
-				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -608,12 +609,12 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearHistorialTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialTipoCambio objHistorialTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 		/****Limpiar Cache****/
 		factoryPoliticaComercialService.limpiarCacheLocal();
 		/****Limpiar Cache****/
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialTipoCambio(
-				objHistorialTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objHistorialTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -627,10 +628,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarHistorialTipoCambioxTipoCambioxActivo(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialTipoCambioxTipoCambioxActivo(
-				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -643,10 +644,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarHistorialTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarHistorialTipoCambioxActivo(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxActivo(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -662,10 +663,10 @@ public class PoliticaComercialController {
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechafinal)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxTipoCambioEntreFechas(
-				codigotipocambio, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				codigotipocambio, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -679,10 +680,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  listarTodoHistorialTipoCambio(HttpServletRequest request
 			)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialTipoCambio(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -700,12 +701,12 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  crearHistorialFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialFeeComision objHistorialFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 		/****Limpiar Cache****/
 		factoryPoliticaComercialService.limpiarCacheLocal();
 		/****Limpiar Cache****/
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialFeeComision(
-				objHistorialFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())), 
+				objHistorialFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
 				request.getRequestURI()), HttpStatus.OK);
 	}
 
@@ -719,10 +720,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  buscarHistorialFeeComisionxProductoFeeComisionxActivo(HttpServletRequest request
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialFeeComisionxProductoFeeComisionxActivo(
-				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -736,10 +737,10 @@ public class PoliticaComercialController {
 	public ResponseEntity<Response>  listarTodoHistorialFeeComision(HttpServletRequest request
 			)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialFeeComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 	
@@ -752,10 +753,10 @@ public class PoliticaComercialController {
 	@GetMapping(value = "${servicio.app.uri.listarHistorialFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response>  listarHistorialFeeComisionxActivo(HttpServletRequest request)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxActivo(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),request.getRequestURI()), HttpStatus.OK);
+				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),request.getRequestURI()), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Listar Historial Fee Comision por productofeecomision entre fechas", response = Response.class)
@@ -770,10 +771,10 @@ public class PoliticaComercialController {
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechafinal)  throws LogicaImplException{
 
-		Instant start = Instant.now();
+		DateTime now = new DateTime();
 
 		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxProductoFeeComisionEntreFechas(
-				codigoproductofeecomision, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(Duration.between(start, Instant.now())),
+				codigoproductofeecomision, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
 				request.getRequestURI()), HttpStatus.OK);
 	}
 }

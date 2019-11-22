@@ -12,10 +12,12 @@ import org.springframework.context.annotation.PropertySource;
 /****Properties que pueden cambiar el valor ****/
 public class FactoryApiProperties {
 	
-	private Estado estado;
+	private Configdata configdata;
 	private Cache cache;
 	
-    public static class Estado {
+    public static class Configdata {
+    	
+    	private String fechayyyyMMddTHHmmssZ;
     	
     	@NotBlank
 		private String estadoActivoConsulta;
@@ -26,15 +28,27 @@ public class FactoryApiProperties {
 		public String getEstadoActivoConsulta() {
 			return estadoActivoConsulta;
 		}
+		
 		public void setEstadoActivoConsulta(String estadoActivoConsulta) {
 			this.estadoActivoConsulta = estadoActivoConsulta;
 		}
+		
 		public String getEstadoInactivoConsulta() {
 			return estadoInactivoConsulta;
 		}
+		
 		public void setEstadoInactivoConsulta(String estadoInactivoConsulta) {
 			this.estadoInactivoConsulta = estadoInactivoConsulta;
 		}
+		
+		public String getFechayyyyMMddTHHmmssZ() {
+			return fechayyyyMMddTHHmmssZ;
+		}
+		
+		public void setFechayyyyMMddTHHmmssZ(String fechayyyyMMddTHHmmssZ) {
+			this.fechayyyyMMddTHHmmssZ = fechayyyyMMddTHHmmssZ;
+		}
+		
     }
 	
     public static class Cache {
@@ -191,12 +205,12 @@ public class FactoryApiProperties {
     	
     }
 
-	public Estado getEstado() {
-		return estado;
+	public Configdata getConfigdata() {
+		return configdata;
 	}
 
-	public void setEstado(Estado estado) {
-		this.estado = estado;
+	public void setConfigdata(Configdata configdata) {
+		this.configdata = configdata;
 	}
 
 	public Cache getCache() {
