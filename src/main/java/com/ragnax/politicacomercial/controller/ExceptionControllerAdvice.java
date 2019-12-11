@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.ragnax.politicacomercial.controller.response.AbstractWrapperError;
-import com.ragnax.politicacomercial.controller.response.Response;
+import com.ragnax.politicacomercial.controller.response.RagnaxError;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 
 /**
@@ -38,27 +37,35 @@ public class ExceptionControllerAdvice {
 //    }
     
     
-    @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     @ExceptionHandler(LogicaImplException.class)
-    public ResponseEntity<Response> handlerException(LogicaImplException e) {
-        LOGGER.error("Error en tipocambio: {} .", e.getMessage());
+    public ResponseEntity<RagnaxError> handlerException(LogicaImplException lie) {
+        LOGGER.error("Error en politicacomercial: {} .", lie.getMessage());
 //        return new ResponseEntity<>(new Response(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(new Response(new AbstractWrapperError(e.getMessage()),  HttpStatus.SERVICE_UNAVAILABLE.value(), null, null, null), HttpStatus.SERVICE_UNAVAILABLE);
+//        return new ResponseEntity<>(new PoliticaComercialError(new PoliticaComercialError(e.getMessage()),  HttpStatus.SERVICE_UNAVAILABLE.value(), null, null, null), HttpStatus.SERVICE_UNAVAILABLE);
+        
+        return new ResponseEntity<>(new RagnaxError(HttpStatus.ACCEPTED.value(), lie.getMessage()),
+                HttpStatus.ACCEPTED);
+        
     }
     
     @ResponseStatus(value = HttpStatus.ALREADY_REPORTED)
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<Response> handlerException(NumberFormatException e) {
-        LOGGER.error("Error en tipocambio: {} .", e.getMessage());
+    public ResponseEntity<RagnaxError> handlerException(NumberFormatException nfe) {
+        LOGGER.error("Error en politicacomercial: {} .", nfe.getMessage());
 //        return new ResponseEntity<>(new Response(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(new Response(new AbstractWrapperError(e.getMessage()),  HttpStatus.ALREADY_REPORTED.value(), null, null, null), HttpStatus.ALREADY_REPORTED);
+//        return new ResponseEntity<>(new Response(new PoliticaComercialError(e.getMessage()),  HttpStatus.ALREADY_REPORTED.value(), null, null, null), HttpStatus.ALREADY_REPORTED);
+        return new ResponseEntity<>(new RagnaxError(HttpStatus.ALREADY_REPORTED.value(), nfe.getMessage()),
+                HttpStatus.ALREADY_REPORTED);
     }
     
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Response> handlerException(Exception e) {
-        LOGGER.error("Error en tipocambio: {} .", e.getMessage());
+    public ResponseEntity<RagnaxError> handlerException(Exception e) {
+        LOGGER.error("Error en politicacomercial: {} .", e.getMessage());
 //        return new ResponseEntity<>(new Response(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR.value(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(new Response(new AbstractWrapperError(e.getMessage()),  HttpStatus.SERVICE_UNAVAILABLE.value(), null, null, null), HttpStatus.SERVICE_UNAVAILABLE);
+//        return new ResponseEntity<>(new Response(new PoliticaComercialError(e.getMessage()),  HttpStatus.SERVICE_UNAVAILABLE.value(), null, null, null), HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(new RagnaxError(HttpStatus.ALREADY_REPORTED.value(), e.getMessage()),
+                HttpStatus.ALREADY_REPORTED);
     }
 }

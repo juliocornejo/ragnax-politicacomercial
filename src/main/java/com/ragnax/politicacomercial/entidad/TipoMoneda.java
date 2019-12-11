@@ -1,19 +1,23 @@
 package com.ragnax.politicacomercial.entidad;
 
-
-import java.util.List;
+import java.io.Serializable;
 
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: Region
+ * Entity implementation class for Entity: TipoMoneda
  * en la base de Datos representa 
  */
 @Entity
 @Table (name="tipo_moneda")
 
-public class TipoMoneda{
+public class TipoMoneda implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6364104554717791393L;
+
 	@Id
 	@OrderBy
 	@Column(name="id_tipo_moneda")
@@ -34,12 +38,13 @@ public class TipoMoneda{
 	@Column(name="estado_tipo_moneda")
 	private Boolean estadoTipoMoneda;
 	
-	
-	@OneToMany(mappedBy="idTipoMonedaBase")
-	private List<TipoCambio> tipos_cambios_bases;
-	
-	@OneToMany(mappedBy="idTipoMonedaCambio")
-	private List<TipoCambio> tipos_cambios_destinos;
+//	@JsonIgnore
+//	@OneToMany(mappedBy="idTipoMonedaBase")
+//	private List<TipoCambio> tipos_cambios_bases;
+//	
+//	@JsonIgnore
+//	@OneToMany(mappedBy="idTipoMonedaCambio")
+//	private List<TipoCambio> tipos_cambios_destinos;
 	
 	
 	public TipoMoneda() {
@@ -124,20 +129,20 @@ public class TipoMoneda{
 		this.estadoTipoMoneda = estadoTipoMoneda;
 	}
 
-	public List<TipoCambio> getTipos_cambios_bases() {
-		return tipos_cambios_bases;
-	}
-
-	public void setTipos_cambios_bases(List<TipoCambio> tipos_cambios_bases) {
-		this.tipos_cambios_bases = tipos_cambios_bases;
-	}
-
-	public List<TipoCambio> getTipos_cambios_destinos() {
-		return tipos_cambios_destinos;
-	}
-
-	public void setTipos_cambios_destinos(List<TipoCambio> tipos_cambios_destinos) {
-		this.tipos_cambios_destinos = tipos_cambios_destinos;
-	}
+//	public List<TipoCambio> getTipos_cambios_bases() {
+//		return tipos_cambios_bases;
+//	}
+//
+//	public void setTipos_cambios_bases(List<TipoCambio> tipos_cambios_bases) {
+//		this.tipos_cambios_bases = tipos_cambios_bases;
+//	}
+//
+//	public List<TipoCambio> getTipos_cambios_destinos() {
+//		return tipos_cambios_destinos;
+//	}
+//
+//	public void setTipos_cambios_destinos(List<TipoCambio> tipos_cambios_destinos) {
+//		this.tipos_cambios_destinos = tipos_cambios_destinos;
+//	}
 	
 }

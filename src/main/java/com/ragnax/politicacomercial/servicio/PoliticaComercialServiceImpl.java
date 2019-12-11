@@ -1,12 +1,10 @@
 package com.ragnax.politicacomercial.servicio;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,24 +29,30 @@ import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 import com.ragnax.politicacomercial.repository.FactoryPoliticaComercialDAO;
-import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComercial;
+import com.ragnax.politicacomercial.servicio.clientes.ZapalaClienteRest;
+import com.ragnax.politicacomercial.servicio.clientes.ZapalaRequest;
+import com.ragnax.politicacomercial.servicio.utilidades.PoliticaComercialUtilidades;
 
 @Service
 @CacheConfig(cacheNames = { "buscarTipoMoneda", "listarTodoTipoMoneda", "buscarTipoNegocio", 
 		"listarTodoTipoNegocio", "buscarTipoFeeComision", "listarTodoTipoFeeComision", "buscarTipoValorComision",
 		"listarTodoTipoValorComision", "buscarPaisxCodigoPortal", "listarTodoPais", "buscarTipoCambioxCodigo", 
-		"listarTipoCambioxTipoMonedaBase",
-		"listarTodoTipoCambio", "buscarProductoFeeComisionxCodigo",
+		"listarTipoCambioxTipoMonedaBase", "listarTodoTipoCambio", "buscarProductoFeeComisionxCodigo",
 		"listarTodoProductoFeeComision"})
 @ComponentScan(basePackageClasses = { FactoryApiProperties.class})
-public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComercialService {
+public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 	//Segun se necesite se van creando llamadas al repositorio para devolver entities.
 	@Autowired
 	private FactoryPoliticaComercialDAO factoryPoliticaComercialDAO;
 	
 	@Autowired
+	private ZapalaClienteRest zapalaClienteRest;
+//	@Autowired
+//	private PoliticaComercialUtilidad politicaComercialUtilidad;
+	
+	@Autowired
 	private FactoryApiProperties factoryApiProperties;
-
+		
 	/***********************************************************/
 	/****** TipoMoneda TipoMoneda TipoMoneda *******************/
 	/***********************************************************/
@@ -57,9 +61,6 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		
 		try {
-			
-			
-			
 			Pageable pageByCodigoMoneda = PageRequest.of(0, 1, Sort.by("codigoTipoMonedaUpperCase").descending());
 			/*Codigo debe existir por el id, y el nombre no debe existir*/
 			Page<TipoMoneda> pageCodigoTipoMoneda  = factoryPoliticaComercialDAO.getTipoMonedaRepository().findByCodigoTipoMonedaUpperCase(objTipoMoneda.getCodigoTipoMonedaUpperCase().toUpperCase(), pageByCodigoMoneda);
@@ -636,8 +637,21 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 					buscarTipoMoneda(objTipoCambio.getIdTipoMonedaCambio()).getTipoMoneda().getEstadoTipoMoneda())){
 				//Obtener Moneda Base
 				//Obtener Moneda de Cambio
-				String codigoTipoCambio = UtilidadesPoliticaComercial.obtenerCodigoTipoCambio(objTipoCambio);
-
+//				List<String> listaCadena = new ArrayList<String>();
+//				
+//				String codigoTipoCambio = objTipoCambio.getIdTipoMonedaBase().getIdTipoMoneda()
+//						+""+objTipoCambio.getIdTipoMonedaCambio().getIdTipoMoneda();
+//				codigoTipoCambio = codigoTipoCambio.trim();
+//				codigoTipoCambio = codigoTipoCambio.replace("\\s", "").replace(" ", "");
+//				codigoTipoCambio = codigoTipoCambio.toLowerCase();
+//
+//				listaCadena.add(codigoTipoCambio);
+//				
+//				String codigoTipoCambio = politicaComercialUtilidad.obtenerCodigoTipoCambio(objTipoCambio);
+				String codigoTipoCambio = zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
+						PoliticaComercialUtilidades.crearListaCadenaCodigoTipoCambio(objTipoCambio))).getCodigoGenerado();
+				
+				
 				Pageable pageByCodigoTipoCambio = PageRequest.of(0, 1, Sort.by("codigoTipoCambio").descending());
 
 				Page<TipoCambio> pageCodigoTipoCambio  = factoryPoliticaComercialDAO.getTipoCambioRepository().
@@ -669,7 +683,10 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		try {
 
-			if(objTipoCambio.getCodigoTipoCambio().equals(UtilidadesPoliticaComercial.obtenerCodigoTipoCambio(objTipoCambio))) {
+			//if(objTipoCambio.getCodigoTipoCambio().equals(politicaComercialUtilidad.obtenerCodigoTipoCambio(objTipoCambio))) {
+
+			if(objTipoCambio.getCodigoTipoCambio().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
+					PoliticaComercialUtilidades.crearListaCadenaCodigoTipoCambio(objTipoCambio))).getCodigoGenerado())){
 
 				Pageable pageByCodigoDesc = PageRequest.of(0, 1, Sort.by("codigoTipoCambio").descending());
 				/*****Buscar el ProductoFeeComision por codigo *****/
@@ -679,14 +696,14 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 				TipoCambio metTipoCambio = (pageCodigoTipoCambio.isEmpty()) ? factoryPoliticaComercialDAO.getTipoCambioRepository().
 						findByIdTipoMonedaBaseAndIdTipoMonedaCambio(objTipoCambio.getIdTipoMonedaBase(), objTipoCambio.getIdTipoMonedaCambio()) : null;
 
-				if(metTipoCambio!=null) {
-					throw new LogicaImplException();
-				}
-				factoryPoliticaComercialDAO.getTipoCambioRepository().save(objTipoCambio);
+						if(metTipoCambio!=null) {
+							throw new LogicaImplException();
+						}
+						factoryPoliticaComercialDAO.getTipoCambioRepository().save(objTipoCambio);
 
-				objTipoCambio = buscarTipoCambioxCodigo(objTipoCambio).getTipoCambio();
+						objTipoCambio = buscarTipoCambioxCodigo(objTipoCambio).getTipoCambio();
 
-				politicaComercial.setTipoCambio(objTipoCambio);
+						politicaComercial.setTipoCambio(objTipoCambio);
 
 			}else {
 				throw new LogicaImplException("No se puede crear TipoFeeComision, codigo de tipo de cambio ya existe");
@@ -771,8 +788,11 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		try {
 			//Tipo de Fee Activo y Tipo de Negocio Activo 
 
-			String codigoProductoFeeComision = UtilidadesPoliticaComercial.obtenerCodigoProductoFeeComision(objProductoFeeComision);
-
+//			String codigoProductoFeeComision = politicaComercialUtilidad.obtenerCodigoProductoFeeComision(objProductoFeeComision);
+			
+			String codigoProductoFeeComision = zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
+					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado();
+			
 			if(buscarTipoFeeComision(objProductoFeeComision.getIdTipoFeeComision()).getTipoFeeComision().getEstadoTipoFeeComision() &&
 					buscarTipoFeeComision(objProductoFeeComision.getIdTipoFeeComision()).getTipoFeeComision().getEstadoTipoFeeComision() && 
 					buscarTipoNegocio(objProductoFeeComision.getIdTipoNegocio()).getTipoNegocio().getEstadoTipoNegocio() &&
@@ -817,8 +837,12 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 			/****Siempre validar que no exista el codigo ******/
 			/****Siempre validar que no tipofee y tiponegocio + nombre ******/
 
-			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(UtilidadesPoliticaComercial.
-					obtenerCodigoProductoFeeComision(objProductoFeeComision))) {
+			//			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(politicaComercialUtilidad.
+			//					obtenerCodigoProductoFeeComision(objProductoFeeComision))) {
+
+			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
+					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado())) {
+
 				Pageable pageByCodigoDesc = PageRequest.of(0, 1, Sort.by("codigoProductoFeeComision").descending());
 				/*****Buscar el ProductoFeeComision por codigo *****/
 				Page<ProductoFeeComision> pageCodigoProducto  = factoryPoliticaComercialDAO.getProductoFeeComisionRepository().findByCodigoProductoFeeComision(
@@ -848,22 +872,22 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 	}
 
 	public PoliticaComercial actualizarProductoFeeComision(String codigoProductoFeeComision, ProductoFeeComision objProductoFeeComision) throws LogicaImplException{
-		
+
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
 			//Tiene que existir el productoPoliticaComercial - tiponegoci - tipofee - nombre
-			
-			if(objProductoFeeComision.getCodigoProductoFeeComision()!=null && codigoProductoFeeComision.equals(
-					UtilidadesPoliticaComercial.obtenerCodigoProductoFeeComision(objProductoFeeComision)) && 
+
+			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
+					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado()) && 
 					buscarProductoFeeComisionxCodigoProductoServicio(new ProductoFeeComision(codigoProductoFeeComision)).getProductoFeeComision()!=null){
 
-					objProductoFeeComision.setCodigoProductoFeeComision(codigoProductoFeeComision);
+				objProductoFeeComision.setCodigoProductoFeeComision(codigoProductoFeeComision);
 
-					factoryPoliticaComercialDAO.getProductoFeeComisionRepository().save(objProductoFeeComision);
+				factoryPoliticaComercialDAO.getProductoFeeComisionRepository().save(objProductoFeeComision);
 
-					politicaComercial.setProductoFeeComision(objProductoFeeComision);
-				
+				politicaComercial.setProductoFeeComision(objProductoFeeComision);
+
 			}else {
 				throw new LogicaImplException("No se puede actualizar ProductoFeeComision, parametros existen en un identificador distinto");
 			}
@@ -952,7 +976,7 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		
-		Timestamp tsInicial = new Timestamp(Instant.now().getMillis());
+		Timestamp tsInicial = new Timestamp(new Date().getTime());
 
 		try {	
 
@@ -1047,9 +1071,13 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 			buscarTipoCambioxCodigo(new TipoCambio(codigoTipoCambio));
 			
-			Timestamp tsInicial = UtilidadesPoliticaComercial.convertirStrFechaConFormatToTimestamp(sFechaInicial, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ());
+			Timestamp tsInicial = zapalaClienteRest.convertirStrFechaConFormatToTimestamp(new ZapalaRequest(
+					PoliticaComercialUtilidades.convertirStrFechaConFormatToTimestamp(
+							sFechaInicial, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ()))).getTiempoStrtoTimeStamp();
 			
-			Timestamp tsFinal = UtilidadesPoliticaComercial.convertirStrFechaConFormatToTimestamp(sFechaFinal, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ());
+			Timestamp tsFinal = zapalaClienteRest.convertirStrFechaConFormatToTimestamp(new ZapalaRequest(
+					PoliticaComercialUtilidades.convertirStrFechaConFormatToTimestamp(
+							sFechaFinal, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ()))).getTiempoStrtoTimeStamp();
 			
 			List<HistorialTipoCambio> repListaHistorialTipoCambio = factoryPoliticaComercialDAO.getHistorialTipoCambioRepository().
 					findAllByIdTipoCambioAndFechaInicioTipoCambioBetween(new TipoCambio(codigoTipoCambio), tsInicial, tsFinal);
@@ -1092,7 +1120,8 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
-		Timestamp tsInicial = new Timestamp(Instant.now().getMillis());
+		Timestamp tsInicial = new Timestamp(new Date().getTime());
+		
 
 		try {
 			TipoValorComision feeTipoValorComision = buscarTipoValorComision(objHistorialFeeComision.getIdTipoValorComision()).getTipoValorComision();
@@ -1221,9 +1250,14 @@ public class FactoryPoliticaComercialServiceImpl implements FactoryPoliticaComer
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
-			Timestamp tsInicial = UtilidadesPoliticaComercial.convertirStrFechaConFormatToTimestamp(sFechaInicial, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ());
 			
-			Timestamp tsFinal = UtilidadesPoliticaComercial.convertirStrFechaConFormatToTimestamp(sFechaFinal, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ());
+			Timestamp tsInicial = zapalaClienteRest.convertirStrFechaConFormatToTimestamp(new ZapalaRequest(
+					PoliticaComercialUtilidades.convertirStrFechaConFormatToTimestamp(
+							sFechaInicial, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ()))).getTiempoStrtoTimeStamp();
+			
+			Timestamp tsFinal = zapalaClienteRest.convertirStrFechaConFormatToTimestamp(new ZapalaRequest(
+					PoliticaComercialUtilidades.convertirStrFechaConFormatToTimestamp(
+							sFechaFinal, factoryApiProperties.getConfigdata().getFechayyyyMMddTHHmmssZ()))).getTiempoStrtoTimeStamp();
 
 			ProductoFeeComision feeProductoPoliticaComercial = buscarProductoFeeComisionxCodigoProductoServicio(new ProductoFeeComision(codigoProductoFeeComision)).getProductoFeeComision();
 

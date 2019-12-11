@@ -3,8 +3,6 @@ package com.ragnax.politicacomercial.controller.response;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.ragnax.politicacomercial.entidad.HistorialFeeComision;
 import com.ragnax.politicacomercial.entidad.ProductoFeeComision;
 import com.ragnax.politicacomercial.entidad.TipoFeeComision;
@@ -15,7 +13,6 @@ import com.ragnax.politicacomercial.entidad.Pais;
 import com.ragnax.politicacomercial.entidad.TipoCambio;
 import com.ragnax.politicacomercial.entidad.TipoMoneda;
 
-@XmlRootElement(name="politicaComercial")
 public class PoliticaComercial implements Serializable{
 
 	private static final long serialVersionUID = -4301293450469130528L;

@@ -21,8 +21,6 @@ public interface ProductoFeeComisionRepository extends JpaRepository<ProductoFee
 	//Traer todo lo activo por id-producto- y tipo de la comision asociada al producto
 	ProductoFeeComision findByIdTipoNegocioAndIdTipoFeeComisionAndIdPaisAndNombreProductoServicio(TipoNegocio fkIdTipoNegocio, TipoFeeComision fkIdTipoFeeComision, Pais fkIdPais, String nombreProductoServicio);
 	
-//	ProductoFeeComision findByIdTipoNegocioAndIdTipoFeeComisionAndNombreProductoServicioAndEstadoProductoFeeComision(TipoNegocio fkIdTipoNegocio, TipoFeeComision fkIdTipoFeeComision, String nombreProductoServicio, Boolean estadoProductoFeeComision);
-	
 	List<ProductoFeeComision> findByIdTipoNegocioAndEstadoProductoFeeComision(TipoNegocio fkIdTipoNegocio, Boolean estadoProductoFeeComision);
 	                                 
 	Page<ProductoFeeComision> findAll(Pageable pageable);

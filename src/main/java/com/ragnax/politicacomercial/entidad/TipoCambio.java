@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
- * Entity implementation class for Entity: Region
+ * Entity implementation class for Entity: TipoCambio
  * en la base de Datos representa 
  */
 @Entity
@@ -34,7 +36,8 @@ public class TipoCambio{
 	
 	@Column(name="descipcion_tipo_cambio")
 	private String descripcionTipoCambio;
-		
+	
+	@JsonIgnore
 	@OneToMany(mappedBy="idTipoCambio")
 	private List<HistorialTipoCambio> historiales_tipos_cambio;
 	

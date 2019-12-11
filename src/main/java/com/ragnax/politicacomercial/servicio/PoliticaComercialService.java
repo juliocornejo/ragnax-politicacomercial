@@ -12,7 +12,7 @@ import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
 
-public interface FactoryPoliticaComercialService {
+public interface PoliticaComercialService {
 	
 	
 	public PoliticaComercial crearTipoMoneda(TipoMoneda objTipoMoneda) throws LogicaImplException;

@@ -1,6 +1,7 @@
 package com.ragnax.politicacomercial.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ragnax.politicacomercial.controller.response.Response;
+import com.ragnax.politicacomercial.controller.response.RagnaxError;
 import com.ragnax.politicacomercial.entidad.HistorialFeeComision;
 import com.ragnax.politicacomercial.entidad.HistorialTipoCambio;
 import com.ragnax.politicacomercial.entidad.Pais;
@@ -25,8 +26,7 @@ import com.ragnax.politicacomercial.entidad.TipoMoneda;
 import com.ragnax.politicacomercial.entidad.TipoNegocio;
 import com.ragnax.politicacomercial.entidad.TipoValorComision;
 import com.ragnax.politicacomercial.exception.LogicaImplException;
-import com.ragnax.politicacomercial.servicio.FactoryPoliticaComercialService;
-import com.ragnax.politicacomercial.servicio.utilidades.UtilidadesPoliticaComercial;
+import com.ragnax.politicacomercial.servicio.PoliticaComercialService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,747 +34,750 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 @RestController
-@RequestMapping(value = { "${servicio.app.controller}" })
+@RequestMapping
+//(value = { "${servicio.app.controller}" })
 public class PoliticaComercialController {
 	
 	/****@GetMapping  no soporta Errors****/
 	@Autowired
-	FactoryPoliticaComercialService factoryPoliticaComercialService;
+	PoliticaComercialService politicaComercialService;
+	
+//	@Autowired
+//	PoliticaComercialUtilidad politicaComercialUtilidad;
 
 	
 	@GetMapping(value = "${servicio.app.uri.limpiarCache}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public void clearAllCaches() {
-		factoryPoliticaComercialService.limpiarCacheLocal();
+		politicaComercialService.limpiarCacheLocal();
 	}
 	
 	/***************************************************/
 	/*************** TipoMoneda ***************/
 	/***************************************************/
-	@ApiOperation(value = "Crear Tipo de Moneda", response = Response.class)
+	@ApiOperation(value = "Crear Tipo de Moneda", response = TipoMoneda.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoMoneda.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearTipoMoneda(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoMoneda>  crearTipoMoneda(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoMoneda objTipoMoneda, @ApiIgnore Errors errors)  throws LogicaImplException{
-
-		DateTime now = new DateTime();
 		
-		;
 		
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoMoneda(
-				objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.crearTipoMoneda(objTipoMoneda).getTipoMoneda(), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Actualizar Tipo de Moneda", response = Response.class)
+	@ApiOperation(value = "Actualizar Tipo de Moneda", response = TipoMoneda.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de actualizacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoMoneda.class)
 	})
 	@PutMapping(value = "${servicio.app.uri.actualizarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  actualizarTipoMoneda(
-			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoMoneda objTipoMoneda,  
+	public ResponseEntity<TipoMoneda>  actualizarTipoMoneda(
+			  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoMoneda objTipoMoneda,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoMoneda(
-				Integer.parseInt(id), objTipoMoneda), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.actualizarTipoMoneda(
+				Integer.parseInt(id), objTipoMoneda).getTipoMoneda(), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Buscar Tipo de Moneda", response = Response.class)
+	@ApiOperation(value = "Buscar Tipo de Moneda", response = TipoMoneda.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoMoneda.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarTipoMoneda(HttpServletRequest request,  
+	public ResponseEntity<TipoMoneda>  buscarTipoMoneda(  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarTipoMoneda(
+				new TipoMoneda(Integer.parseInt(id))).getTipoMoneda(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoMoneda(
-				new TipoMoneda(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	
-	@ApiOperation(value = "Listar Todos los Tipos de Monedas", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Tipos de Monedas", response = TipoMoneda.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoMoneda.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoMoneda}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoTipoMoneda(HttpServletRequest request)  throws LogicaImplException{
-
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoMoneda(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+	public ResponseEntity<List<TipoMoneda>>  listarTodoTipoMoneda()  throws LogicaImplException{
+		
+		return new ResponseEntity<>(politicaComercialService.listarTodoTipoMoneda().getListaTipoMoneda(), HttpStatus.OK);
+		
 	}
 	
 	/***************************************************/
 	/*************** TipoNegocio *** *******************/
 	/***************************************************/
-	@ApiOperation(value = "Crear Tipo de Negocio", response = Response.class)
+	@ApiOperation(value = "Crear Tipo de Negocio", response = TipoNegocio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoNegocio.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoNegocio>  crearTipoNegocio(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoNegocio objTipoNegocio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.crearTipoNegocio(
+				objTipoNegocio).getTipoNegocio(), HttpStatus.OK);
 		
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoNegocio(
-				objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Actualizar Tipo de Negocio", response = Response.class)
+	@ApiOperation(value = "Actualizar Tipo de Negocio", response = TipoNegocio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de actualizacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoNegocio.class)
 	})
 	@PutMapping(value = "${servicio.app.uri.actualizarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  actualizarTipoNegocio(
-			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoNegocio objTipoNegocio,  
+	public ResponseEntity<TipoNegocio>  actualizarTipoNegocio(
+			  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoNegocio objTipoNegocio,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoNegocio(
-				Integer.parseInt(id), objTipoNegocio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.actualizarTipoNegocio(
+				Integer.parseInt(id), objTipoNegocio).getTipoNegocio(), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Buscar Tipo de Negocio", response = Response.class)
+	@ApiOperation(value = "Buscar Tipo de Negocio", response = TipoNegocio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoNegocio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarTipoNegocio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
+	public ResponseEntity<TipoNegocio>  buscarTipoNegocio(  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarTipoNegocio(
+				new TipoNegocio(Integer.parseInt(id))).getTipoNegocio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoNegocio(
-				new TipoNegocio(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarTipoNegocio(
+//				new TipoNegocio(Integer.parseInt(id))), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Listar Todos los Tipos de Negocio", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Tipos de Negocio", response = TipoNegocio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoNegocio.class)
 	})
 
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoNegocio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoTipoNegocio(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<TipoNegocio>>  listarTodoTipoNegocio()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoTipoNegocio()
+				.getListaTipoNegocio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoNegocio(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoTipoNegocio(), 
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 
 	}
 	
 	/***************************************************/
 	/*************** TipoFeeComision *******************/
 	/***************************************************/
-	@ApiOperation(value = "Crear Tipo de Fee Comision", response = Response.class)
+	@ApiOperation(value = "Crear Tipo de Fee Comision", response = TipoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoFeeComision.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearTipoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoFeeComision>  crearTipoFeeComision(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoFeeComision objTipoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoFeeComision(
-				objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.crearTipoFeeComision(
+				objTipoFeeComision).getTipoFeeComision(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new TipoFeeComision(null,  HttpStatus.OK.value(), politicaComercialService.crearTipoFeeComision(
+//				objTipoFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Actualizar Tipo de Fee Comision", response = Response.class)
+	@ApiOperation(value = "Actualizar Tipo de Fee Comision", response = TipoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de actualizacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoFeeComision.class)
 	})
 	@PutMapping(value = "${servicio.app.uri.actualizarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  actualizarTipoFeeComision(
-			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoFeeComision objTipoFeeComision,  
+	public ResponseEntity<TipoFeeComision>  actualizarTipoFeeComision(
+			  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid TipoFeeComision objTipoFeeComision,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
+		
+		return new ResponseEntity<>(politicaComercialService.crearTipoFeeComision(
+				objTipoFeeComision).getTipoFeeComision(), HttpStatus.OK);
+		
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarTipoFeeComision(
-				Integer.parseInt(id), objTipoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.actualizarTipoFeeComision(
+//				Integer.parseInt(id), objTipoFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Buscar Tipo de Fee-comision", response = Response.class)
+	@ApiOperation(value = "Buscar Tipo de Fee-comision", response = TipoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarTipoFeeComision(HttpServletRequest request,  
+	public ResponseEntity<TipoFeeComision>  buscarTipoFeeComision(  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarTipoFeeComision(
+				new TipoFeeComision(Integer.parseInt(id))).getTipoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoFeeComision(
-				new TipoFeeComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarTipoFeeComision(
+//				new TipoFeeComision(Integer.parseInt(id))), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Listar Todo Tipo de Fee-comision", response = Response.class)
+	@ApiOperation(value = "Listar Todo Tipo de Fee-comision", response = TipoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoTipoFeeComision(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<TipoFeeComision>  listarTodoTipoFeeComision()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoTipoFeeComision().getTipoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoFeeComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoTipoFeeComision(),
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 
 	}
 	
 	/***************************************************/
 	/*************** TipoValorComision *******************/
 	/***************************************************/
-	@ApiOperation(value = "Crear Tipo de Valor Comision", response = Response.class)
+	@ApiOperation(value = "Crear Tipo de Valor Comision", response = TipoValorComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoValorComision.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoValorComision>  crearTipoValorComision(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoValorComision objTipoValorComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.crearTipoValorComision(objTipoValorComision).getTipoValorComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoValorComision(
-				objTipoValorComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearTipoValorComision(
+//				objTipoValorComision), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Buscar Tipo de Valor para Fee-comision", response = Response.class)
+	@ApiOperation(value = "Buscar Tipo de Valor para Fee-comision", response = TipoValorComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoValorComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarTipoValorComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
+	public ResponseEntity<TipoValorComision>  buscarTipoValorComision(  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String id)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoValorComision(
-				new TipoValorComision(Integer.parseInt(id))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.buscarTipoValorComision(new TipoValorComision(Integer.parseInt(id))).getTipoValorComision(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarTipoValorComision(
+//				new TipoValorComision(Integer.parseInt(id))), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Listar Todo Tipo Valor Comision", response = Response.class)
+	@ApiOperation(value = "Listar Todo Tipo Valor Comision", response = TipoValorComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoValorComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoValorComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoTipoValorComision(HttpServletRequest request)  throws LogicaImplException{
-		DateTime now = new DateTime();
+	public ResponseEntity<List<TipoValorComision>>  listarTodoTipoValorComision()  throws LogicaImplException{
+		
+		return new ResponseEntity<>(politicaComercialService.listarTodoTipoValorComision().getListaTipoValorComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoValorComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoTipoValorComision(),
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
 	/***************************************************/
 	/*************** Pais ******************************/
 	/***************************************************/
-	@ApiOperation(value = "Crear Pais", response = Response.class)
+	@ApiOperation(value = "Crear Pais", response = Pais.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Pais.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearPais}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearPais(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<Pais>  crearPais(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid Pais objPais, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.crearPais(objPais).getPais(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearPais(
-				objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearPais(
+//				objPais), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Actualizar Pais", response = Response.class)
+	@ApiOperation(value = "Actualizar Pais", response = Pais.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de actualizacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Pais.class)
 	})
 	@PutMapping(value = "${servicio.app.uri.actualizarPais}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  actualizarPais(
-			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid Pais objPais,  
+	public ResponseEntity<Pais>  actualizarPais(
+			  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid Pais objPais,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.actualizarPais(codigoportal , objPais).getPais(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarPais(
-				codigoportal , objPais), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.actualizarPais(
+//				codigoportal , objPais), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Buscar Pais por el codigo de portal/pais", response = Response.class)
+	@ApiOperation(value = "Buscar Pais por el codigo de portal/pais", response = Pais.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Pais.class)
 	}) 
 	@GetMapping(value = "${servicio.app.uri.buscarPaisxCodigoPortal}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarPaisxCodigoPortal(HttpServletRequest request,  
+	public ResponseEntity<Pais>  buscarPaisxCodigoPortal(  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoportal)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarPaisxCodigoPortal(
-				new  Pais(codigoportal)) , UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.buscarPaisxCodigoPortal(
+				new  Pais(codigoportal)).getPais(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarPaisxCodigoPortal(
+//				new  Pais(codigoportal)) , politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Listar Todos los Paises", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Paises", response = Pais.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Pais.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoPais}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoPais(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<Pais>>  listarTodoPais()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoPais().getListaPais(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoPais(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoPais(), 
+//				politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
 	/***************************************************/
 	/*************** TipoCambio ***************/
 	/***************************************************/
-	@ApiOperation(value = "Generar Codigo Tipo de Cambio", response = Response.class)
+	@ApiOperation(value = "Generar Codigo Tipo de Cambio", response = TipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoCambio.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.generarCodigoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  generarCodigoTipoCambioxTipoMonedaBasexTipoMonedaCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoCambio>  generarCodigoTipoCambioxTipoMonedaBasexTipoMonedaCambio(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.generarCodigoTipoCambio(objTipoCambio).getTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarCodigoTipoCambio(
-				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.generarCodigoTipoCambio(
+//				objTipoCambio), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Crear Tipo de Cambio", response = Response.class)
+	@ApiOperation(value = "Crear Tipo de Cambio", response = TipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoCambio.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<TipoCambio>  crearTipoCambio(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid TipoCambio objTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.crearTipoCambio(objTipoCambio).getTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearTipoCambio(
-				objTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearTipoCambio(
+//				objTipoCambio), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Buscar Tipo de Cambio x codigo", response = Response.class)
+	@ApiOperation(value = "Buscar Tipo de Cambio x codigo", response = TipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarTipoCambioxCodigo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarTipoCambioxCodigo(HttpServletRequest request,  
+	public ResponseEntity<TipoCambio>  buscarTipoCambioxCodigo(  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarTipoCambioxCodigo(
+				new TipoCambio(codigotipocambio)).getTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarTipoCambioxCodigo(
-				new TipoCambio(codigotipocambio)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarTipoCambioxCodigo(
+//				new TipoCambio(codigotipocambio)), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Todos los Tipos de Cambio", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Tipos de Cambio", response = TipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoTipoCambio(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<TipoCambio>>  listarTodoTipoCambio()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoTipoCambio().getListaTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoTipoCambio(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoTipoCambio(), 
+//				politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 
 	}
 	
-	@ApiOperation(value = "Listar Todos los Tipos de Cambio", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Tipos de Cambio", response = TipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = TipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTipoCambioxTipoMonedaBase}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTipoCambioxTipoMonedaBase(HttpServletRequest request,
+	public ResponseEntity<List<TipoCambio>> listarTipoCambioxTipoMonedaBase(
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String idtipomonedabase)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTipoCambioxTipoMonedaBase(
+				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)).getListaTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTipoCambioxTipoMonedaBase(
-				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTipoCambioxTipoMonedaBase(
+//				new TipoCambio(new TipoMoneda(Integer.parseInt(idtipomonedabase)),null)), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 
 	}
 	
 	/***************************************************/
 	/*************** ProductoFeeComision ***************/
 	/***************************************************/
-	@ApiOperation(value = "Generar Codigo de Producto de Fee-comision", response = Response.class)
+	@ApiOperation(value = "Generar Codigo de Producto de Fee-comision", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.generarCodigoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  generarCodigoProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<ProductoFeeComision>  generarCodigoProductoFeeComision(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.generarNuevoCodigoProductoFeeComision(
+				objProductoFeeComision).getProductoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.generarNuevoCodigoProductoFeeComision(
-				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.generarNuevoCodigoProductoFeeComision(
+//				objProductoFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Crear Producto de Fee-comision", response = Response.class)
+	@ApiOperation(value = "Crear Producto de Fee-comision", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearProductoFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<ProductoFeeComision>  crearProductoFeeComision(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid ProductoFeeComision objProductoFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.crearProductoFeeComision(
+				objProductoFeeComision).getProductoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearProductoFeeComision(
-				objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearProductoFeeComision(
+//				objProductoFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Actualizar Producto de Fee Comision", response = Response.class)
+	@ApiOperation(value = "Actualizar Producto de Fee Comision", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de actualizacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	})
 	@PutMapping(value = "${servicio.app.uri.actualizarProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  actualizarProductoFeeComision(
-			HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid ProductoFeeComision objProductoFeeComision,  
+	public ResponseEntity<ProductoFeeComision>  actualizarProductoFeeComision(
+			  @ApiParam(value = "objeto de entrada", required = true) @RequestBody @Valid ProductoFeeComision objProductoFeeComision,  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision, 
 			@ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.actualizarProductoFeeComision(
+				codigoproductofeecomision, objProductoFeeComision).getProductoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.actualizarProductoFeeComision(
-				codigoproductofeecomision, objProductoFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.actualizarProductoFeeComision(
+//				codigoproductofeecomision, objProductoFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Buscar Producto de Fee-comision por tipo de negocio, tipo de fee, producto de servicio y estado", response = Response.class)
+	@ApiOperation(value = "Buscar Producto de Fee-comision por tipo de negocio, tipo de fee, producto de servicio y estado", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	}) 
 	@GetMapping(value = "${servicio.app.uri.buscarProductoFeeComisionxCodigoProductoServicio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarProductoFeeComisionxCodigoProductoServicio(HttpServletRequest request,  
+	public ResponseEntity<ProductoFeeComision>  buscarProductoFeeComisionxCodigoProductoServicio(  
 			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductoservicio)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarProductoFeeComisionxCodigoProductoServicio(
+				new ProductoFeeComision(codigoproductoservicio)).getProductoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarProductoFeeComisionxCodigoProductoServicio(
-				new ProductoFeeComision(codigoproductoservicio)) , UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarProductoFeeComisionxCodigoProductoServicio(
+//				new ProductoFeeComision(codigoproductoservicio)) , politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Todos los Producto de Fee-comision", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Producto de Fee-comision", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoProductoFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoProductoFeeComision(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<ProductoFeeComision>>  listarTodoProductoFeeComision()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),factoryPoliticaComercialService.listarTodoProductoFeeComision(), 
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.listarTodoProductoFeeComision().getListaProductoFeeComision(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(),politicaComercialService.listarTodoProductoFeeComision(), 
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
 	
-	@ApiOperation(value = "Buscar Producto de Fee-comision por tipo de negocio y estado", response = Response.class)
+	@ApiOperation(value = "Buscar Producto de Fee-comision por tipo de negocio y estado", response = ProductoFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = ProductoFeeComision.class)
 	})
 
 	@GetMapping(value = "${servicio.app.uri.listarProductoFeeComisionxTipoNegocioxEstado}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarProductoFeeComisionxTipoNegocioxEstado(HttpServletRequest request
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String tiponegocio
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "false") @PathVariable String estadoproductoservicio)  throws LogicaImplException{
+	public ResponseEntity<List<ProductoFeeComision>>  listarProductoFeeComisionxTipoNegocioxEstado(
+			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String tiponegocio,
+			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "false") @PathVariable String estadoproductoservicio)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarProductoFeeComisionxTipoNegocioxEstado(
+				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))).getListaProductoFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarProductoFeeComisionxTipoNegocioxEstado(
-				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.listarProductoFeeComisionxTipoNegocioxEstado(
+//				new ProductoFeeComision(new TipoNegocio(Integer.parseInt(tiponegocio)), Boolean.parseBoolean(estadoproductoservicio))), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
 	/***************************************************/
 	/*************** HistorialTipoCambio ********/
 	/***************************************************/
 	
-	@ApiOperation(value = "Crear Historial de Tipo de Cambio", response = Response.class)
+	@ApiOperation(value = "Crear Historial de Tipo de Cambio", response = HistorialTipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialTipoCambio.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearHistorialTipoCambio(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<HistorialTipoCambio>  crearHistorialTipoCambio(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialTipoCambio objHistorialTipoCambio, @ApiIgnore Errors errors)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		
 		/****Limpiar Cache****/
-		factoryPoliticaComercialService.limpiarCacheLocal();
+		politicaComercialService.limpiarCacheLocal();
 		/****Limpiar Cache****/
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialTipoCambio(
-				objHistorialTipoCambio), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+		
+		return new ResponseEntity<>(politicaComercialService.crearHistorialTipoCambio(
+				objHistorialTipoCambio).getHistorialTipoCambio(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearHistorialTipoCambio(
+//				objHistorialTipoCambio), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Buscar Historial de Tipo de Cambio por tipo de Cambio, solo activos", response = Response.class)
+	@ApiOperation(value = "Buscar Historial de Tipo de Cambio por tipo de Cambio, solo activos", response = HistorialTipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialTipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarHistorialTipoCambioxTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarHistorialTipoCambioxTipoCambioxActivo(HttpServletRequest request
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
+	public ResponseEntity<HistorialTipoCambio>  buscarHistorialTipoCambioxTipoCambioxActivo(
+			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.buscarHistorialTipoCambioxTipoCambioxActivo(
+				new HistorialTipoCambio(new TipoCambio(codigotipocambio))).getHistorialTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialTipoCambioxTipoCambioxActivo(
-				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarHistorialTipoCambioxTipoCambioxActivo(
+//				new HistorialTipoCambio(new TipoCambio(codigotipocambio))), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Historial de Tipo de Cambio, solo activos", response = Response.class)
+	@ApiOperation(value = "Listar Historial de Tipo de Cambio, solo activos", response = HistorialTipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialTipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarHistorialTipoCambioxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarHistorialTipoCambioxActivo(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<HistorialTipoCambio>> listarHistorialTipoCambioxActivo()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarHistorialTipoCambioxActivo()
+				.getListaHistorialTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxActivo(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.listarHistorialTipoCambioxActivo(),
+//				politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Historial de Tipo de Cambio por tipo de cambio entre fechas", response = Response.class)
+	@ApiOperation(value = "Listar Historial de Tipo de Cambio por tipo de cambio entre fechas", response = HistorialTipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialTipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarHistorialTipoCambioxTipoCambioEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarHistorialTipoCambioxTipoCambioEntreFechas(HttpServletRequest request
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio
+	public ResponseEntity<List<HistorialTipoCambio>>  listarHistorialTipoCambioxTipoCambioEntreFechas(
+				@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigotipocambio
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechafinal)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarHistorialTipoCambioxTipoCambioEntreFechas(
+				codigotipocambio, fechainicial, fechafinal).getListaHistorialTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialTipoCambioxTipoCambioEntreFechas(
-				codigotipocambio, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.listarHistorialTipoCambioxTipoCambioEntreFechas(
+//				codigotipocambio, fechainicial, fechafinal), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Todos los Historial de Tipo de Cambio", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Historial de Tipo de Cambio", response = HistorialTipoCambio.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialTipoCambio.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoHistorialTipoCambio}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoHistorialTipoCambio(HttpServletRequest request
+	public ResponseEntity<List<HistorialTipoCambio>> listarTodoHistorialTipoCambio(
 			)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoHistorialTipoCambio().getListaHistorialTipoCambio(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialTipoCambio(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.listarTodoHistorialTipoCambio(),
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
 	/***************************************************/
 	/*************** HistorialFeeComision ********/
 	/***************************************************/
 	
-	@ApiOperation(value = "Crear Historial Fee Comision", response = Response.class)
+	@ApiOperation(value = "Crear Historial Fee Comision", response = HistorialFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de creacion", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialFeeComision.class)
 	})
 	@PostMapping(value = "${servicio.app.uri.crearHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  crearHistorialFeeComision(HttpServletRequest request,  @ApiParam(value = "objeto de entrada", required = true) 
+	public ResponseEntity<HistorialFeeComision>  crearHistorialFeeComision(  @ApiParam(value = "objeto de entrada", required = true) 
 	@RequestBody @Valid HistorialFeeComision objHistorialFeeComision, @ApiIgnore Errors errors)  throws LogicaImplException{
-
-		DateTime now = new DateTime();
+		
 		/****Limpiar Cache****/
-		factoryPoliticaComercialService.limpiarCacheLocal();
+		politicaComercialService.limpiarCacheLocal();
+		
+		return new ResponseEntity<>(politicaComercialService.crearHistorialFeeComision(objHistorialFeeComision).getHistorialFeeComision(), HttpStatus.OK);
 		/****Limpiar Cache****/
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.crearHistorialFeeComision(
-				objHistorialFeeComision), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())), 
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.crearHistorialFeeComision(
+//				objHistorialFeeComision), politicaComercialUtilidad.generarTiempoDuracion(now), 
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Buscar Historial Fee Comision por productofeecomision, solo activos", response = Response.class)
+	@ApiOperation(value = "Buscar Historial Fee Comision por productofeecomision, solo activos", response = HistorialFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.buscarHistorialFeeComisionxCodigoProductoFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  buscarHistorialFeeComisionxProductoFeeComisionxActivo(HttpServletRequest request
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision)  throws LogicaImplException{
+	public ResponseEntity<HistorialFeeComision>  buscarHistorialFeeComisionxProductoFeeComisionxActivo(
+			@ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.buscarHistorialFeeComisionxProductoFeeComisionxActivo(
-				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.buscarHistorialFeeComisionxProductoFeeComisionxActivo(
+				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)).getHistorialFeeComision(), HttpStatus.OK);
+		
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.buscarHistorialFeeComisionxProductoFeeComisionxActivo(
+//				new HistorialFeeComision(new ProductoFeeComision(codigoproductofeecomision), null)), politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Todos los Historial Fee Comision", response = Response.class)
+	@ApiOperation(value = "Listar Todos los Historial Fee Comision", response = HistorialFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarTodoHistorialFeeComision}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarTodoHistorialFeeComision(HttpServletRequest request
+	public ResponseEntity<List<HistorialFeeComision>>  listarTodoHistorialFeeComision(
 			)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
+		return new ResponseEntity<>(politicaComercialService.listarTodoHistorialFeeComision().
+				getListaHistorialFeeComision(), HttpStatus.OK);
 
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarTodoHistorialFeeComision(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+//		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), politicaComercialService.listarTodoHistorialFeeComision(),
+//				politicaComercialUtilidad.generarTiempoDuracion(now),
+//				request.getRequestURI()), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Historial Fee Comision, por estadohistorialfeecomision", response = Response.class)
+	@ApiOperation(value = "Listar Historial Fee Comision, por estadohistorialfeecomision", response = HistorialFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarHistorialFeeComisionxActivo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarHistorialFeeComisionxActivo(HttpServletRequest request)  throws LogicaImplException{
+	public ResponseEntity<List<HistorialFeeComision>> listarHistorialFeeComisionxActivo()  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxActivo(),
-				UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.listarTodoHistorialFeeComision().getListaHistorialFeeComision(), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Listar Historial Fee Comision por productofeecomision entre fechas", response = Response.class)
+	@ApiOperation(value = "Listar Historial Fee Comision por productofeecomision entre fechas", response = HistorialFeeComision.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 422, message = "Error al procesar los datos de busqueda", response = Response.class),
-			@ApiResponse(code = 503, message = "Error con el servicio", response = Response.class),
-			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = Response.class)
+			@ApiResponse(code = 422, message = "Error al procesar los datos", response = RagnaxError.class),
+			@ApiResponse(code = 503, message = "Error con el servicio", response = RagnaxError.class),
+			@ApiResponse(code = 200, message = "Servicio ejecutado satisfactoriamente", response = HistorialFeeComision.class)
 	})
 	@GetMapping(value = "${servicio.app.uri.listarHistorialFeeComisionxProductoFeeComisionEntreFechas}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response>  listarFeeComisionxProductoFeeComisionEntreFechas(HttpServletRequest request
-			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision
+	public ResponseEntity<List<HistorialFeeComision>>  listarFeeComisionxProductoFeeComisionEntreFechas(
+			  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String codigoproductofeecomision
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechainicial
 			,  @ApiParam(value = "objeto de entrada", required = true, defaultValue = "0") @PathVariable String fechafinal)  throws LogicaImplException{
 
-		DateTime now = new DateTime();
-
-		return new ResponseEntity<>(new Response(null,  HttpStatus.OK.value(), factoryPoliticaComercialService.listarHistorialFeeComisionxProductoFeeComisionEntreFechas(
-				codigoproductofeecomision, fechainicial, fechafinal), UtilidadesPoliticaComercial.generarTiempoDuracion(new Duration(now, new DateTime())),
-				request.getRequestURI()), HttpStatus.OK);
+		return new ResponseEntity<>(politicaComercialService.listarHistorialFeeComisionxProductoFeeComisionEntreFechas(
+				codigoproductofeecomision, fechainicial, fechafinal).getListaHistorialFeeComision(), HttpStatus.OK);
 	}
 }

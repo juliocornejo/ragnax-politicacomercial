@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.ragnax.politicacomercial.entidad.TipoCambio;
 import com.ragnax.politicacomercial.entidad.TipoMoneda;
 
-
 public interface TipoCambioRepository extends JpaRepository<TipoCambio, Integer> {
 	
 	//Traer todo lo activo por id-producto- y tipo de la comision asociada al producto

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 /**
- *  implementation class for : Region
+ *  implementation class for : HistorialTipoCambio
  * en la base de Datos representa 
  */
 @Entity

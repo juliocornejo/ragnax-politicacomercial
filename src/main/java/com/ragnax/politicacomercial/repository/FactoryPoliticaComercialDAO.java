@@ -3,9 +3,7 @@ package com.ragnax.politicacomercial.repository;
 
 
 public interface FactoryPoliticaComercialDAO {
-	
-//	public FeeComisionRepository getFeeComisionRepository();
-	
+
 	public TipoMonedaRepository getTipoMonedaRepository();
 	public PaisRepository getPaisRepository();
 	public TipoCambioRepository getTipoCambioRepository();

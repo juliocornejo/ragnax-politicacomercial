@@ -1,19 +1,23 @@
 package com.ragnax.politicacomercial.controller.response;
 
-public class AbstractWrapperError {
+import java.io.Serializable;
+
+public class RagnaxError implements Serializable {
+	
+	private static final long serialVersionUID = -1360021176413807221L;
 	
 	private int codigo;
 	private String mensaje;
 
-	public AbstractWrapperError() {
+	public RagnaxError() {
 	}
 	
-	public AbstractWrapperError(String mensaje) {
+	public RagnaxError(String mensaje) {
 		super();
 		this.mensaje = mensaje;
 	}
 	
-	public AbstractWrapperError(int codigo, String mensaje) {
+	public RagnaxError(int codigo, String mensaje) {
 		super();
 		this.codigo = codigo;
 		this.mensaje = mensaje;
