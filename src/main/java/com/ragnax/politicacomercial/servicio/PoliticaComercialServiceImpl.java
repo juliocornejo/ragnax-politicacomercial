@@ -41,14 +41,12 @@ import com.ragnax.politicacomercial.servicio.utilidades.PoliticaComercialUtilida
 		"listarTodoProductoFeeComision"})
 @ComponentScan(basePackageClasses = { FactoryApiProperties.class})
 public class PoliticaComercialServiceImpl implements PoliticaComercialService {
-	//Segun se necesite se van creando llamadas al repositorio para devolver entities.
+	/*****Segun se necesite se van creando llamadas al repositorio para devolver entities.*****/
 	@Autowired
 	private FactoryPoliticaComercialDAO factoryPoliticaComercialDAO;
 	
 	@Autowired
 	private ZapalaClienteRest zapalaClienteRest;
-//	@Autowired
-//	private PoliticaComercialUtilidad politicaComercialUtilidad;
 	
 	@Autowired
 	private FactoryApiProperties factoryApiProperties;
@@ -75,7 +73,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 				Page<TipoMoneda> pageIdTipoMoneda = factoryPoliticaComercialDAO.getTipoMonedaRepository().findAll(pageByidDesc);
 
 				Integer idTipoMoneda = (!pageIdTipoMoneda.isEmpty()) ? (Integer) pageIdTipoMoneda.getContent().get(0).getIdTipoMoneda() + 1 : 1; 
-				/*Siempre hacer mayusculas los codigos**/
+				/***Siempre hacer mayusculas los codigos**/
 				objTipoMoneda.setCodigoTipoMonedaUpperCase(objTipoMoneda.getCodigoTipoMonedaUpperCase().toUpperCase());
 				objTipoMoneda.setNombreTipoMonedaLowerCase(objTipoMoneda.getNombreTipoMoneda().toLowerCase());
 				objTipoMoneda.setEstadoTipoMoneda(Boolean.parseBoolean(factoryApiProperties.getConfigdata().getEstadoActivoConsulta()));
@@ -113,7 +111,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 			Page<TipoMoneda> pageNombreTipoMoneda  = factoryPoliticaComercialDAO.getTipoMonedaRepository().findByNombreTipoMonedaLowerCase(objTipoMoneda.getNombreTipoMoneda().toLowerCase(), pageByNombreMoneda);
 			/***Busqueda por nombre existe en un tipoNegocio No existe. o solo existe en el pageNombreTipoNegocio.idTipoNegocio = id 
-				//... solo actualizar estado****/
+				... solo actualizar estado****/
 			if((!pageCodigoTipoMoneda.isEmpty() && pageCodigoTipoMoneda.getContent().get(0).getIdTipoMoneda()==id && pageNombreTipoMoneda.isEmpty())
 					|| (buscarTipoMoneda(new TipoMoneda(id)).getTipoMoneda()!=null && pageNombreTipoMoneda.isEmpty() && (pageCodigoTipoMoneda.isEmpty()&& pageNombreTipoMoneda.isEmpty()))){
 				objTipoMoneda.setIdTipoMoneda(id);
@@ -230,7 +228,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 			Page<TipoNegocio> pageNombreTipoNegocio  = factoryPoliticaComercialDAO.getTipoNegocioRepository().findByNombreTipoNegocio(objTipoNegocio.getNombreTipoNegocio(), pageByNombreDesc);
 
 			/***Busqueda por nombre existe en un tipoNegocio No existe. o solo existe en el pageNombreTipoNegocio.idTipoNegocio = id 
-					//... solo actualizar estado****/
+					... solo actualizar estado****/
 			if((!pageNombreTipoNegocio.isEmpty() && pageNombreTipoNegocio.getContent().get(0).getIdTipoNegocio()==id)
 					|| (buscarTipoNegocio(new TipoNegocio(id)).getTipoNegocio()!=null && pageNombreTipoNegocio.isEmpty())){
 				objTipoNegocio.setIdTipoNegocio(id);
@@ -255,7 +253,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		try {
-			//Como la lista es pequeña, obtener todos desde cache y luego buscar el Id.
+			/*****Como la lista es pequeña, obtener todos desde cache y luego buscar el Id. ****/
 			Optional<TipoNegocio> optPerTipoNegocio = factoryPoliticaComercialDAO.getTipoNegocioRepository().findById(objTipoNegocio.getIdTipoNegocio());
 
 			/***Si existe reemplazar por el nuevo*/
@@ -343,7 +341,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 			Page<TipoFeeComision> pageNombreTipoFeeComision  = factoryPoliticaComercialDAO.getTipoFeeComisionRepository().findByNombreTipoFeeComision(objTipoFeeComision.getNombreTipoFeeComision(), pageByNombreDesc);
 
 			/***Busqueda por nombre existe en un tipoNegocio No existe. o solo existe en el pageNombreTipoFeeComision.idTipoFeeComision = id 
-					//... solo actualizar estado****/
+					... solo actualizar estado****/
 			if((!pageNombreTipoFeeComision.isEmpty() && pageNombreTipoFeeComision.getContent().get(0).getIdTipoFeeComision()==id)
 					|| (buscarTipoFeeComision(new TipoFeeComision(id)).getTipoFeeComision()!=null && pageNombreTipoFeeComision.isEmpty())){
 				objTipoFeeComision.setIdTipoFeeComision(id);
@@ -368,7 +366,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		try {
-			//Como la lista es pequeña, obtener todos desde cache y luego buscar el Id.
+			/***** Como la lista es pequeña, obtener todos desde cache y luego buscar el Id. ****/
 			Optional<TipoFeeComision> optPerTipoFeeComision = factoryPoliticaComercialDAO.getTipoFeeComisionRepository().findById(objTipoFeeComision.getIdTipoFeeComision());
 
 			/***Si existe reemplazar por el nuevo*/
@@ -391,13 +389,13 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
-			//Como la lista es pequeña, obtener todos desde cache y luego buscar el Id.
+			/*****Como la lista es pequeña, obtener todos desde cache y luego buscar el Id. ****/
 			Pageable pageByNombreDesc = PageRequest.of(0, 1, Sort.by("nombreTipoFeeComision").descending());
 
 			Page<TipoFeeComision> pageNombreTipoFeeComision  = factoryPoliticaComercialDAO.getTipoFeeComisionRepository().findByNombreTipoFeeComision(objTipoFeeComision.getNombreTipoFeeComision(), pageByNombreDesc);
 
 			/***Busqueda por nombre existe en un tipoNegocio No existe. o solo existe en el pageNombreTipoFeeComision.idTipoFeeComision = id 
-				//... solo actualizar estado****/
+				... solo actualizar estado****/
 			if(!pageNombreTipoFeeComision.isEmpty()){
 
 				politicaComercial.setTipoFeeComision(pageNombreTipoFeeComision.getContent().get(0));
@@ -474,7 +472,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		try {
-			//Como la lista es pequeña, obtener todos desde cache y luego buscar el Id.
+			/***** Como la lista es pequeña, obtener todos desde cache y luego buscar el Id. ****/
 			Optional<TipoValorComision> optPerTipoValorComision = factoryPoliticaComercialDAO.getTipoValorComisionRepository().findById(objTipoValorComision.getIdTipoValorComision());
 
 			/***Si existe reemplazar por el nuevo*/
@@ -517,7 +515,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 	public PoliticaComercial crearPais(Pais objPais) throws LogicaImplException{
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
-//		Integer idPais =1;
+/*****		Integer idPais =1; ****/
 		try {
 			Pageable pageByCodigoPortalPais = PageRequest.of(0, 1, Sort.by("codigoPortalPaisLowerCase").descending());
 
@@ -559,7 +557,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 			Page<Pais> pageCodigoPortalPais  = factoryPoliticaComercialDAO.getPaisRepository().findByCodigoPortalPaisLowerCase(codigopais.toLowerCase(), pageByCodigoPortalPais);
 
-			// Si existe el codigo y el nombre del pais no existe en ningun otro pais
+			/***** Si existe el codigo y el nombre del pais no existe en ningun otro pais ****/
 			Pageable pageByNombrePortalPais = PageRequest.of(0, 1, Sort.by("nombrePaisLowerCase").descending());
 
 			Page<Pais> pageNombrePortalPais  = (pageCodigoPortalPais.getContent().get(0).getCodigoPortalPaisLowerCase().equals(codigopais.toLowerCase())) ? 
@@ -632,7 +630,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		try {
-			//Validar que no existan los las moneda base y la moneda de cambio
+			/******Validar que no existan los las moneda base y la moneda de cambio ****/
 			if((buscarTipoMoneda(objTipoCambio.getIdTipoMonedaBase()).getTipoMoneda().getEstadoTipoMoneda() && 
 					buscarTipoMoneda(objTipoCambio.getIdTipoMonedaCambio()).getTipoMoneda().getEstadoTipoMoneda())){
 				//Obtener Moneda Base
@@ -682,8 +680,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
-
-			//if(objTipoCambio.getCodigoTipoCambio().equals(politicaComercialUtilidad.obtenerCodigoTipoCambio(objTipoCambio))) {
+			/*****if(objTipoCambio.getCodigoTipoCambio().equals(politicaComercialUtilidad.obtenerCodigoTipoCambio(objTipoCambio))) {*****/
 
 			if(objTipoCambio.getCodigoTipoCambio().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
 					PoliticaComercialUtilidades.crearListaCadenaCodigoTipoCambio(objTipoCambio))).getCodigoGenerado())){
@@ -786,9 +783,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 		try {
-			//Tipo de Fee Activo y Tipo de Negocio Activo 
-
-//			String codigoProductoFeeComision = politicaComercialUtilidad.obtenerCodigoProductoFeeComision(objProductoFeeComision);
+			/***Tipo de Fee Activo y Tipo de Negocio Activo ****/
 			
 			String codigoProductoFeeComision = zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
 					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado();
@@ -837,9 +832,6 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 			/****Siempre validar que no exista el codigo ******/
 			/****Siempre validar que no tipofee y tiponegocio + nombre ******/
 
-			//			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(politicaComercialUtilidad.
-			//					obtenerCodigoProductoFeeComision(objProductoFeeComision))) {
-
 			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
 					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado())) {
 
@@ -848,11 +840,11 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 				Page<ProductoFeeComision> pageCodigoProducto  = factoryPoliticaComercialDAO.getProductoFeeComisionRepository().findByCodigoProductoFeeComision(
 						objProductoFeeComision.getCodigoProductoFeeComision(), pageByCodigoDesc);
 
-				//Con el nombre obtenido constrastar si existe con ese idTipoNegocio y idTipoFee 
+				/****Con el nombre obtenido constrastar si existe con ese idTipoNegocio y idTipoFee****/ 
 				ProductoFeeComision productoFeeComision = (pageCodigoProducto.isEmpty()) ? factoryPoliticaComercialDAO.getProductoFeeComisionRepository().
 						findByIdTipoNegocioAndIdTipoFeeComisionAndIdPaisAndNombreProductoServicio( objProductoFeeComision.getIdTipoNegocio(), objProductoFeeComision.getIdTipoFeeComision(), 
 								objProductoFeeComision.getIdPais(), objProductoFeeComision.getNombreProductoServicio()) : null;
-						//debe ir el codigo del productoFeeComision
+						/****debe ir el codigo del productoFeeComision*****/
 						if(productoFeeComision!=null){
 							throw new LogicaImplException("No se puede crear ProductoFeeComision, parametros ya existen en identificador valido");
 						}
@@ -876,7 +868,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		PoliticaComercial politicaComercial = new PoliticaComercial();
 
 		try {
-			//Tiene que existir el productoPoliticaComercial - tiponegoci - tipofee - nombre
+			/*****Tiene que existir el productoPoliticaComercial - tiponegoci - tipofee - nombre*****/
 
 			if(objProductoFeeComision.getCodigoProductoFeeComision().equals(zapalaClienteRest.generarCodigoByNumero(new ZapalaRequest(
 					PoliticaComercialUtilidades.crearListaCadenaCodigoProductoFeeComision(objProductoFeeComision))).getCodigoGenerado()) && 
@@ -892,7 +884,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 				throw new LogicaImplException("No se puede actualizar ProductoFeeComision, parametros existen en un identificador distinto");
 			}
 			/***Busqueda por nombre existe en un tipoNegocio No existe. o solo existe en el pageNombreTipoNegocio.idTipoNegocio = id 
-				//... solo actualizar estado****/
+				... solo actualizar estado****/
 		} catch (Exception e) {
 			throw new LogicaImplException(e.getMessage());
 		}
@@ -926,8 +918,6 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 		return politicaComercial;
 	}
-
-	//sin cache
 
 	@Cacheable(value="listarTodoProductoFeeComision")
 	public PoliticaComercial listarTodoProductoFeeComision() throws LogicaImplException{
@@ -1002,7 +992,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 
 					/******* Obtener el ultimo de la lista de HistorialTipoCambio ******/
 
-					//siempre guardar objHistorialTipoCambio
+					/*****siempre guardar objHistorialTipoCambio*****/
 					objHistorialTipoCambio.setIdHistorialTipoCambio(idHistorialTipoCambio);
 					objHistorialTipoCambio.setFechaInicioTipoCambio(tsInicial);
 					objHistorialTipoCambio.setEstadoHistorialTipoCambio(Boolean.parseBoolean(factoryApiProperties.getConfigdata().getEstadoActivoConsulta()));
@@ -1042,7 +1032,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		return politicaComercial;
 	}	
 
-	//desde el historial de comisiones obtener los activos
+	/*****desde el historial de comisiones obtener los activos*****/
 	public PoliticaComercial listarHistorialTipoCambioxActivo() throws LogicaImplException{
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
@@ -1062,7 +1052,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		return politicaComercial;
 	}
 
-	//desde el historial de comisiones obtener los activos
+	/*****desde el historial de comisiones obtener los activos*****/
 	public PoliticaComercial listarHistorialTipoCambioxTipoCambioEntreFechas(String codigoTipoCambio, String sFechaInicial, String sFechaFinal) throws LogicaImplException{
 
 		PoliticaComercial politicaComercial = new PoliticaComercial();
@@ -1153,7 +1143,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 						Integer idHistorialFeeComision = (!pageIdHistorialFeeComision.isEmpty()) ? (Integer) pageIdHistorialFeeComision.getContent().get(0).getIdHistorialFeeComision() + 1 : 1;
 						/******* Obtener el ultimo de la lista de HistorialFeeComision ******/
 
-						//siempre guardar objHistorialFeeComision
+						/*****siempre guardar objHistorialFeeComision*****/
 						objHistorialFeeComision.setIdHistorialFeeComision(idHistorialFeeComision);
 						objHistorialFeeComision.setIdProductoFeeComision(feeProductoPoliticaComercial);
 						objHistorialFeeComision.setIdTipoValorComision(feeTipoValorComision);
@@ -1224,7 +1214,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		return politicaComercial;
 	}
 
-	//desde el historial de comisiones obtener los activos
+	/*****desde el historial de comisiones obtener los activos*****/
 	public PoliticaComercial listarHistorialFeeComisionxActivo() throws LogicaImplException{
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
@@ -1244,7 +1234,7 @@ public class PoliticaComercialServiceImpl implements PoliticaComercialService {
 		return politicaComercial;
 	}
 
-	//desde el historial de comisiones obtener los activos
+	/*****desde el historial de comisiones obtener los activos*****/
 	public PoliticaComercial listarHistorialFeeComisionxProductoFeeComisionEntreFechas(String codigoProductoFeeComision, String sFechaInicial, String sFechaFinal) throws LogicaImplException{
 		
 		PoliticaComercial politicaComercial = new PoliticaComercial();
